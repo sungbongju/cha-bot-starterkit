@@ -17,7 +17,7 @@ const OMNI_MODEL = process.env.OMNI_MODEL || 'omnivoice'
 // 면담 어시스턴트 기본 음성 — omnivoice instruct 어휘 (emo_manifest 검증값).
 // 화자(이경영) 톤에 맞춰 OMNI_INSTRUCT 환경변수로 쉽게 교체 가능.
 const OMNI_INSTRUCT =
-  process.env.OMNI_INSTRUCT || 'male, middle-aged, moderate pitch, korean accent'
+  process.env.OMNI_INSTRUCT || 'female, young adult, moderate pitch, korean accent'
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
