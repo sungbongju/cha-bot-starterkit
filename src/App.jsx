@@ -146,6 +146,14 @@ export default function App() {
   const userVideoRef      = useRef(null)
   const cameraStreamRef   = useRef(null)
   const historyRef        = useRef([])
+
+  // ─── TTS 큐 (streaming 응답을 문장 단위로 순차 재생) ───
+  // sendMessageStream 이 문장 boundary 만날 때마다 enqueueTTS(sentence) 호출.
+  // 큐 프로세서가 fetch /api/tts + vrmAvatar.speak() 를 순차 실행.
+  // ESC 인터럽트 시 clearTTSQueue() 로 큐 비우고 진행 중인 음성 중단.
+  const ttsQueueRef       = useRef([])     // 대기 중인 문장 배열
+  const ttsRunningRef     = useRef(false)  // 프로세서 동작 중?
+  const ttsAbortRef       = useRef(false)  // 인터럽트 플래그
   const sessionIdRef      = useRef(null)   // 학교 DB용 세션 ID (아바타 시작 시 새로)
   const conversationModeRef = useRef('ftf')
 
@@ -242,40 +250,96 @@ export default function App() {
 
   useEffect(() => () => stopUserCamera(), [stopUserCamera])
 
-  // ─── TTS 발화 (LLM 답변 텍스트 → middleton OmniVoice → VRM 립싱크) ──────
-  // 기존 LiveAvatar 의 sendAvatarCommand('avatar.speak_text') 를 대체한다.
-  // fire-and-forget: status 를 내부에서 speaking↔connected 로 관리한다.
-  const speakViaTTS = useCallback(async (text) => {
-    const t = (text || '').trim()
-    if (!t) return
+  // ─── TTS sanitize (스트리밍 chunk 단위) ───────────────────
+  // 백엔드가 plain text streaming 으로 바뀌어 ttsReply 후처리가 사라졌으므로
+  // 프론트에서 한다. 모델이 system prompt 지시 어기고 URL/전화/이메일을 본문에
+  // 박았을 때를 위한 safety net 만 처리 — 정상적으론 contact 카드로 따로 가야 함.
+  const sanitizeForTTS = (s) => {
+    if (!s) return ''
+    return s
+      .replace(/https?:\/\/[^\s)\]]+/gi, '학과 홈페이지')
+      .replace(/\bwww\.[^\s)\]]+/gi, '학과 홈페이지')
+      .replace(/\b1899[-\s]?\d{4}\b/g, '학교 대표 번호')
+      .replace(/\b0\d{1,2}[-\s]?\d{3,4}[-\s]?\d{4}\b/g, '학과 사무실')
+      .replace(/\b\d{3,4}[-\s]?\d{4}\b/g, '학과 사무실')
+      .replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, '학과 이메일')
+      .replace(/\s{2,}/g, ' ')
+      .trim()
+  }
+
+  // ─── TTS 큐 프로세서 ──────────────────────────────────────
+  // ttsQueueRef 에 쌓인 문장을 순차로 /api/tts → vrmAvatar.speak() 처리.
+  // 한 번에 하나만 — 다음 문장은 현재 문장이 끝난 후 시작.
+  const processTTSQueue = useCallback(async () => {
+    if (ttsRunningRef.current) return
+    ttsRunningRef.current = true
     const avatar = vrmAvatarRef.current
+
     try {
-      isSpeakingRef.current = true
-      setStatus('speaking')
-      const res = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: t }),
-      })
-      if (!res.ok) throw new Error('tts ' + res.status)
-      const buf = await res.arrayBuffer()
-      if (avatar && avatar.speak) {
-        await avatar.speak(buf)   // 오디오 재생 + 립싱크, 끝나면(또는 인터럽트 시) resolve
+      while (ttsQueueRef.current.length > 0 && !ttsAbortRef.current) {
+        const sentence = ttsQueueRef.current.shift()
+        const clean = sanitizeForTTS(normalizeTtsText(sentence))
+        if (!clean) continue
+
+        try {
+          const res = await fetch('/api/tts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: clean }),
+          })
+          if (!res.ok) { console.warn('[tts] http', res.status); continue }
+          const buf = await res.arrayBuffer()
+
+          if (ttsAbortRef.current) break
+
+          // 첫 문장 재생 시작 시 status=speaking 진입
+          if (!isSpeakingRef.current) {
+            isSpeakingRef.current = true
+            setStatus('speaking')
+          }
+
+          if (avatar && avatar.speak) {
+            await avatar.speak(buf)
+          }
+        } catch (e) {
+          console.warn('[tts queue] error:', e)
+        }
       }
-    } catch (e) {
-      console.warn('[tts] speak 실패:', e)
     } finally {
-      isSpeakingRef.current = false
-      // 인터럽트로 이미 connected 로 바뀌었을 수 있으니 speaking 일 때만 되돌린다
-      setStatus(s => (s === 'speaking' ? 'connected' : s))
+      ttsRunningRef.current = false
+      ttsAbortRef.current = false
+      // 큐 완전히 비고 abort 도 아니면 connected 복귀
+      if (isSpeakingRef.current && ttsQueueRef.current.length === 0) {
+        isSpeakingRef.current = false
+        setStatus(s => (s === 'speaking' ? 'connected' : s))
+      }
     }
   }, [])
 
-  // ─── 메시지 전송 ───────────────────────────────────
+  // 외부에서 큐에 문장 추가 (streaming sentence boundary 만났을 때)
+  const enqueueTTS = useCallback((sentence) => {
+    const s = (sentence || '').trim()
+    if (!s) return
+    if (conversationModeRef.current === 'ttt') return  // 텍스트 전용 모드
+    ttsQueueRef.current.push(s)
+    processTTSQueue()
+  }, [processTTSQueue])
+
+  // 인터럽트 — 큐 비우고 진행 중인 음성 즉시 중단
+  const clearTTSQueue = useCallback(() => {
+    ttsAbortRef.current = true
+    ttsQueueRef.current = []
+    try { vrmAvatarRef.current?.stopSpeaking?.() } catch {}
+    isSpeakingRef.current = false
+    setStatus(s => (s === 'speaking' ? 'connected' : s))
+  }, [])
+
+  // ─── 메시지 전송 (Streaming SSE 버전) ──────────────────────
+  // /api/chat-stream 으로 토큰 단위 받음. 문장 boundary 만날 때마다 enqueueTTS().
+  // 화면은 토큰 누적될 때마다 갱신 (typewriter 효과).
   const sendMessage = useCallback(async (userText) => {
     const text = userText.trim()
     if (!text || isProcessingRef.current) return
-    // 봇 발화 중에 STT echo가 새 질문으로 들어오면 여기서 방어 (무한루프 차단 마지막 보루)
     if (isSpeakingRef.current) {
       console.warn('[echo guard] sendMessage suppressed during avatar speaking:', text.slice(0, 30))
       return
@@ -286,49 +350,121 @@ export default function App() {
     setMessages(prev => [...prev, { role: 'user', text }])
     historyRef.current = [...historyRef.current, { role: 'user', content: text }]
     userTurnCountRef.current += 1
-
-    // DB 저장 (사용자 메시지)
     if (sessionIdRef.current) saveChat(sessionIdRef.current, 'user', text)
+    setMessages(prev => [...prev, { role: 'assistant', text: '' }]) // 비어있는 assistant bubble
 
-    setMessages(prev => [...prev, { role: 'assistant', text: null }]) // typing
+    let accumulated = ''       // 전체 누적 텍스트 (화면 표시용)
+    let pending = ''           // 아직 TTS 큐에 안 넣은 부분
+    let contactObj = null
+    // 문장 경계: 마침표/물음표/느낌표/줄바꿈 또는 ", "(쉼표+공백) — 최소 길이 보장
+    const MIN_SENT_LEN = 10
+
+    const flushPendingIfSentence = () => {
+      // ',' 는 보너스 끊김 포인트 — 너무 짧으면 무시
+      const m = pending.match(/^([\s\S]*?[.!?…。\n])(.*)$/)
+      if (m && m[1].trim().length >= MIN_SENT_LEN) {
+        enqueueTTS(m[1])
+        pending = m[2]
+        return true
+      }
+      return false
+    }
 
     try {
       const frame = captureCameraFrame()
       const images = frame ? [frame] : []
-      const res = await fetch('/api/chat', {
+
+      const res = await fetch('/api/chat-stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, history: historyRef.current.slice(-8), images })
       })
-      const data = await res.json()
-      const reply    = data.reply    || '죄송해요, 답변을 생성하지 못했어요.'
-      const ttsReply = normalizeTtsText(data.ttsReply || reply)
+      if (!res.ok || !res.body) throw new Error('chat-stream http ' + res.status)
 
-      setMessages(prev => {
-        const next = [...prev]
-        next[next.length - 1] = { role: 'assistant', text: reply, contact: data.contact || null }
-        return next
-      })
-      historyRef.current = [...historyRef.current, { role: 'assistant', content: reply }]
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buf = ''
 
-      // DB 저장 (어시스턴트 답변)
-      if (sessionIdRef.current) saveChat(sessionIdRef.current, 'assistant', reply)
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buf += decoder.decode(value, { stream: true })
 
-      // 아바타 발화 — TTS → VRM 립싱크 (ttt 모드 제외). fire-and-forget.
-      if (conversationModeRef.current !== 'ttt') {
-        speakViaTTS(ttsReply)
+        // SSE 라인 단위 파싱
+        let nlIdx
+        while ((nlIdx = buf.indexOf('\n\n')) !== -1) {
+          const event = buf.slice(0, nlIdx).trim()
+          buf = buf.slice(nlIdx + 2)
+          if (!event.startsWith('data: ')) continue
+          const payload = event.slice(6).trim()
+          if (payload === '[DONE]') { buf = ''; break }
+
+          let obj
+          try { obj = JSON.parse(payload) } catch { continue }
+
+          if (obj.token) {
+            accumulated += obj.token
+            pending += obj.token
+            // 화면 갱신
+            setMessages(prev => {
+              const next = [...prev]
+              const last = next[next.length - 1]
+              if (last && last.role === 'assistant') {
+                next[next.length - 1] = { ...last, text: accumulated }
+              }
+              return next
+            })
+            // 문장 경계 도달 시 TTS 큐에 넣음 (한 chunk 안에 여러 문장이면 반복)
+            while (flushPendingIfSentence()) {}
+          }
+          if (obj.contact) {
+            contactObj = obj.contact
+            setMessages(prev => {
+              const next = [...prev]
+              const last = next[next.length - 1]
+              if (last && last.role === 'assistant') {
+                next[next.length - 1] = { ...last, contact: contactObj }
+              }
+              return next
+            })
+          }
+          if (obj.error) {
+            console.warn('[chat-stream] server error:', obj.error)
+          }
+          if (obj.done) {
+            // 남은 pending 도 TTS 큐로
+            if (pending.trim()) {
+              enqueueTTS(pending)
+              pending = ''
+            }
+          }
+        }
       }
-    } catch {
+      // 스트림 끝났는데 done 마커 못 받았을 경우 — 남은 pending 처리
+      if (pending.trim()) {
+        enqueueTTS(pending)
+        pending = ''
+      }
+
+      const finalReply = accumulated || '죄송해요, 답변을 생성하지 못했어요.'
+      historyRef.current = [...historyRef.current, { role: 'assistant', content: finalReply }]
+      if (sessionIdRef.current) saveChat(sessionIdRef.current, 'assistant', finalReply)
+
+    } catch (e) {
+      console.warn('[chat-stream] error:', e)
       setMessages(prev => {
         const next = [...prev]
-        next[next.length - 1] = { role: 'assistant', text: '오류가 발생했어요. 다시 시도해 주세요.' }
+        const last = next[next.length - 1]
+        if (last && last.role === 'assistant' && !last.text) {
+          next[next.length - 1] = { role: 'assistant', text: '오류가 발생했어요. 다시 시도해 주세요.' }
+        }
         return next
       })
     } finally {
       isProcessingRef.current = false
       setIsProcessing(false)
     }
-  }, [captureCameraFrame, speakViaTTS])
+  }, [captureCameraFrame, enqueueTTS])
 
   // ─── STT 텍스트 제출 (whisper 결과 → sendMessage) ────────────────────
   const submitSpeechText = useCallback((rawText) => {
@@ -407,15 +543,12 @@ export default function App() {
   }, [])
 
   // ─── 아바타 발화 인터럽트 ────────────────────────
+  // 봇 발화만 멈춤. 마이크(MicRecorder)는 그대로 유지 — status가 'connected'로
+  // 바뀌면 아래 echo guard useEffect가 알아서 resume 한다.
+  // streaming 도입 후엔 TTS 큐도 비우고 abort 플래그 세움.
   const interruptAvatar = useCallback(() => {
-    // 봇 발화만 멈춤. 마이크(MicRecorder)는 그대로 유지 — status가 'connected'로
-    // 바뀌면 아래 echo guard useEffect가 알아서 resume 한다.
-    try {
-      vrmAvatarRef.current?.stopSpeaking?.()
-    } catch (e) { console.error('interrupt error:', e) }
-    isSpeakingRef.current = false
-    setStatus('connected')
-  }, [])
+    try { clearTTSQueue() } catch (e) { console.error('interrupt error:', e) }
+  }, [clearTTSQueue])
 
   // ─── echo guard: 봇 발화 중 마이크 pause / 발화 끝나면 resume ──────────
   // status === 'speaking' → MicRecorder.pause() (스트림 유지, VAD/녹음만 중단)
@@ -498,8 +631,8 @@ export default function App() {
     stopUserCamera()
     isSpeakingRef.current = false
 
-    // 진행 중인 TTS 발화 중단
-    try { vrmAvatarRef.current?.stopSpeaking?.() } catch {}
+    // 진행 중인 TTS 발화 + 큐 모두 중단
+    try { clearTTSQueue() } catch {}
 
     // 설문 트리거 — 사용자 턴 3회 이상일 때만 노출
     const endedSessionId = sessionIdRef.current
@@ -524,7 +657,7 @@ export default function App() {
     }
     userTurnCountRef.current = 0
     modesUsedRef.current = new Set()
-  }, [stopListening, stopUserCamera])
+  }, [stopListening, stopUserCamera, clearTTSQueue])
 
   const startTextMode = useCallback(() => {
     clearTimeout(echoResumeTimerRef.current)
@@ -573,14 +706,14 @@ export default function App() {
     const greetingTts = normalizeTtsText(getGreetingTts(user))
     setMessages([{ role: 'assistant', text: greetingText }])
     saveChat(sessionIdRef.current, 'assistant', greetingText)
-    speakViaTTS(greetingTts)   // fire-and-forget — status 를 speaking↔connected 로 관리
+    enqueueTTS(greetingTts)    // TTS 큐로 인사말 전송 — 큐 프로세서가 status 관리
 
     // 마이크 자동 시작 (사용자 클릭(시작 버튼) 컨텍스트 안이라 권한 prompt 가능)
     // MicRecorder는 인사말 발화 중엔 echo guard로 pause → 발화 끝나면 자동 resume
     autoListenRef.current = true
     setAutoListen(true)
     startListening()
-  }, [startListening, startUserCamera, stopUserCamera, user, speakViaTTS])
+  }, [startListening, startUserCamera, stopUserCamera, user, enqueueTTS])
 
   const startConversation = useCallback(() => {
     if (conversationModeRef.current === 'ttt') {
