@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import styles from './AvatarPanel.module.css'
 import VRMAvatar from './VRMAvatar'
 
@@ -27,6 +28,10 @@ export default function AvatarPanel({
   onStop,
   onInterrupt
 }) {
+  // VRM 로드 상태 — videoReady (성공) 와 별개로 에러 여부를 추적.
+  // 이렇게 분리해야 "로딩 중" vs "파일 없음" 을 다르게 안내할 수 있다.
+  const [avatarError, setAvatarError] = useState(false)
+
   const mappedStatus = STATUS_MAP[status] || STATUS_MAP.idle
   const label = mode === 'ttt' && status === 'connected' ? '연결됨' : mappedStatus.label
   const dot = mappedStatus.dot
@@ -54,11 +59,22 @@ export default function AvatarPanel({
           <VRMAvatar
             ref={vrmAvatarRef}
             vrmUrl="/avatar.vrm"
-            onReady={onAvatarReady}
+            onReady={() => { setAvatarError(false); onAvatarReady?.() }}
+            onError={() => setAvatarError(true)}
             style={{ opacity: videoReady ? 1 : 0, transition: 'opacity .35s ease' }}
           />
 
-          {!videoReady && (
+          {/* 로딩 중: 부드러운 스피너 (아바타 로드 시도 중) */}
+          {!videoReady && !avatarError && (
+            <div className={styles.placeholder}>
+              <div className={styles.loadingSpinner} />
+              <p className={styles.placeholderText}>아바타 불러오는 중…</p>
+              <p className={styles.placeholderSub}>VRM 파일이 커서 첫 로드는 몇 초 걸릴 수 있어요.</p>
+            </div>
+          )}
+
+          {/* 로드 실패 (파일 없음 / 404 / 손상): 학생에게 명확한 안내 */}
+          {!videoReady && avatarError && (
             <div className={styles.placeholder}>
               <div className={styles.avatarIcon}>
                 <span>VRM</span>
