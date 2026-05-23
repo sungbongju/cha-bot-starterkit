@@ -1,7 +1,7 @@
 {
-  "name": "cha-interview-bot",
-  "version": "1.0.0",
-  "description": "차의과학대 신입생 전공상담 면담봇",
+  "name": "cha-bot-starter-kit",
+  "version": "0.1.0",
+  "description": "Starter kit for building VRoid VRM-based AI assistant bots (chat + voice + avatar).",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -15,9 +15,17 @@
     "three": "^0.184.0"
   },
   "main": "index.js",
-  "keywords": [],
+  "keywords": [
+    "vrm",
+    "vroid",
+    "three-vrm",
+    "ai-bot",
+    "chatbot",
+    "avatar",
+    "starter-kit"
+  ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.1",
     "vite": "^8.0.10"

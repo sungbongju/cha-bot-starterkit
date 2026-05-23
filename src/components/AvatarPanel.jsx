@@ -61,18 +61,21 @@ export default function AvatarPanel({
           {!videoReady && (
             <div className={styles.placeholder}>
               <div className={styles.avatarIcon}>
-                <span>AI</span>
+                <span>VRM</span>
               </div>
-              <p className={styles.placeholderText}>AI 면담 어시스턴트</p>
-              <p className={styles.placeholderSub}>차의과학대학교 신입생 전공상담</p>
+              <p className={styles.placeholderText}>👋 아바타가 비어있어요</p>
+              <p className={styles.placeholderSub}>
+                <code>public/avatar.vrm</code> 파일을 추가하면 여기에 캐릭터가 나타납니다.<br/>
+                VRoid Studio 또는 VRoid Hub 에서 무료로 받을 수 있어요.
+              </p>
             </div>
           )}
 
           {videoReady && (
             <div className={styles.nameplate}>
               <div className={styles.nameplateInner}>
-                <span className={styles.nameplateName}>AI 면담 어시스턴트</span>
-                <span className={styles.nameplateSub}>차의과학대학교 신입생 전공상담</span>
+                <span className={styles.nameplateName}>내 AI 아바타</span>
+                <span className={styles.nameplateSub}>VRM + three-vrm</span>
               </div>
             </div>
           )}
