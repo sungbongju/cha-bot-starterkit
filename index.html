@@ -52,10 +52,18 @@
     <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script>
       // 카카오 SDK init (한 번만)
+      // 키는 .env 의 VITE_KAKAO_JS_KEY 로부터 Vite 가 빌드/dev 시점에 치환합니다.
+      // (학생/교수님은 코드 수정 없이 Vercel 환경변수 한 줄만 추가하면 됩니다)
       window.addEventListener('DOMContentLoaded', function () {
+        var KAKAO_JS_KEY = '%VITE_KAKAO_JS_KEY%';
+        // 환경변수 미설정 시: 그대로 두면 페이지는 뜨고 카카오 로그인만 비활성
+        if (!KAKAO_JS_KEY || KAKAO_JS_KEY === '%' + 'VITE_KAKAO_JS_KEY%') {
+          console.warn('[Kakao] VITE_KAKAO_JS_KEY not set — Kakao login disabled. Add it in Vercel env or local .env');
+          return;
+        }
         try {
           if (window.Kakao && !window.Kakao.isInitialized()) {
-            window.Kakao.init('fc0a1313d895b1956f3830e5bf14307b');
+            window.Kakao.init(KAKAO_JS_KEY);
           }
         } catch (e) { console.error('Kakao init error:', e); }
       });

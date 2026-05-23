@@ -9,6 +9,8 @@
 .env.production
 .env.staging
 *.env
+# ↓ .env.example 은 템플릿이므로 커밋해야 함 (시크릿 미포함)
+!.env.example
 
 # API 키·토큰·자격증명
 **/secrets/
