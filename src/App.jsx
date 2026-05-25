@@ -1,10 +1,10 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import AvatarPanel from './components/AvatarPanel'
 import ChatPanel from './components/ChatPanel'
+import AuthModal from './components/AuthModal'
 import styles from './App.module.css'
-import { newSessionId, saveChat } from './lib/api'
+import { newSessionId, saveChat, getUser, clearAuth, verifyToken } from './lib/api'
 import { MicRecorder, isMicRecorderSupported } from './lib/stt'
-import { retrieve as retrieveRagContext, warmUp as warmUpRag } from './lib/rag'
 
 // cha-bot-starter-kit
 // ─────────────────────────────────────────────────────────────
@@ -58,6 +58,8 @@ export default function App() {
   const [autoListen, setAutoListen]     = useState(false)
   const [conversationMode, setConversationMode] = useState('ftf')  // ftf | sts | ttt
   const [cameraStream, setCameraStream] = useState(null)
+  const [user, setUser] = useState(getUser())   // 로그인된 사용자 (없으면 null = 익명)
+  const [authOpen, setAuthOpen] = useState(() => !getUser())
   const [theme, setTheme] = useState(() => {
     if (typeof window === 'undefined') return 'light'
     return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
@@ -68,8 +70,14 @@ export default function App() {
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  // 앱 로드 시 RAG 인덱스 미리 fetch (첫 질문 지연 방지)
-  useEffect(() => { warmUpRag() }, [])
+  // 토큰 검증 — 성공하면 모달 닫음 / 실패하면 모달 유지
+  useEffect(() => {
+    verifyToken().then(u => {
+      if (u) { setUser(u); setAuthOpen(false) }
+    })
+  }, [])
+
+  const handleLogout = () => { clearAuth(); setUser(null) }
 
   const toggleTheme = useCallback(() => {
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'))
@@ -300,13 +308,9 @@ export default function App() {
       const frame = wantsVision ? captureCameraFrame() : null
       const images = frame ? [frame] : []
 
-      // Browser-side RAG — retrieve top-K chunks from /public/rag/{chunks,embeddings}.json.
-      // Returns [] if no RAG files / no relevant matches (bot then uses generic LLM).
-      // Customize what's in public/rag/chunks.json to make this bot YOUR bot.
-      let ragContext = []
-      try { ragContext = await retrieveRagContext(text, { topK: 3, minScore: 0.4 }) }
-      catch (e) { console.warn('[rag] retrieve skipped:', e) }
-
+      // Server-side RAG (Team Edition): middleton의 team RAG가 자동 적용됨.
+      // Vercel env 의 TEAM_ID 가 backend endpoint 결정 (예: TEAM_ID=03 → /api/team/03/chat-stream).
+      // 학생은 RAG 수정 시 middleton.p-e.kr/finbot/team/<TEAM_ID>/rag 페이지 사용.
       const res = await fetch('/api/chat-stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -314,7 +318,6 @@ export default function App() {
           message: text,
           history: historyRef.current.slice(-8),
           images,
-          context: ragContext,
         }),
       })
       if (!res.ok || !res.body) throw new Error('chat-stream http ' + res.status)
@@ -674,8 +677,16 @@ export default function App() {
         micEnabled={conversationMode !== 'ttt' && isChatConnected}
         micAvailable={conversationMode !== 'ttt'}
         mode={conversationMode}
+        user={user}
+        onLoginClick={() => setAuthOpen(true)}
+        onLogout={handleLogout}
         theme={theme}
         onToggleTheme={toggleTheme}
+      />
+      <AuthModal
+        open={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onSuccess={(u) => setUser(u)}
       />
     </div>
   )

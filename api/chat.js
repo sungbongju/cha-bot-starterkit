@@ -15,9 +15,10 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
   try {
-    // Starter Kit: batch fallback to plain Gemma4 endpoint (matches chat-stream.js).
+    // Team Edition: batch fallback to per-team Gemma4 endpoint (matches chat-stream.js).
+    const TEAM_ID = process.env.TEAM_ID || '00';
     const UPSTREAM = process.env.ONPREMISE_CHAT_URL
-      || 'https://middleton.p-e.kr/finbot/api/starter-chat';
+      || `https://middleton.p-e.kr/finbot/api/team/${TEAM_ID}/chat`;
     const response = await fetch(UPSTREAM, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

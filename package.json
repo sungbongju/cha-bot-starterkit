@@ -1,11 +1,10 @@
 {
-  "name": "cha-bot-starter-kit",
+  "name": "cha-bot-starterkit",
   "version": "0.1.0",
-  "description": "Starter kit for building VRoid VRM-based AI assistant bots (chat + voice + avatar).",
+  "description": "Team-RAG variant: server-side per-team RAG (via /api/team/:id) + Kakao login. For competitions with managed backend.",
   "scripts": {
     "dev": "vite",
-    "build-rag": "node scripts/build-rag.js",
-    "build": "npm run build-rag && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {

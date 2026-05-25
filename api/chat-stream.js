@@ -12,12 +12,14 @@
 //   data: {"done": true, "fullText": "..."}\n\n
 //   data: [DONE]\n\n
 
-// Starter Kit: plain LLM (Gemma4) + empty RAG.
-// Backend route /api/starter-chat-stream returns generic Korean assistant responses.
-// Students can later swap this URL for their own backend (env override).
+// Team Edition: server-side per-team RAG (managed at /home/student04/finbot/server/data/teams/).
+// Each deployed bot sets TEAM_ID env var (e.g., "03" for 분개해).
+// Backend route: /api/team/{TEAM_ID}/chat-stream  →  team-isolated RAG + Gemma4.
+// RAG is managed via web UI at: https://middleton.p-e.kr/finbot/team/{TEAM_ID}/rag
+const TEAM_ID = process.env.TEAM_ID || '00'   // 00 = no team configured (fallback)
 const UPSTREAM =
   process.env.ONPREMISE_CHAT_STREAM_URL ||
-  'https://middleton.p-e.kr/finbot/api/starter-chat-stream'
+  `https://middleton.p-e.kr/finbot/api/team/${TEAM_ID}/chat-stream`
 
 export const config = {
   // Node 함수 — Edge로 가도 OK 하지만 호환성 위해 Node 유지
