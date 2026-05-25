@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나만의 봇 만들기 자습서 — cha-bot-starterkit (Team Edition)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+    background: #faf8f5;
+    color: #1a1a1a;
+    line-height: 1.75;
+  }
+  .hero {
+    background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%);
+    color: white;
+    padding: 50px 20px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2rem; margin-bottom: 10px; }
+  .hero p { opacity: 0.9; }
+  .hero a { color: #d4a574; text-decoration: none; }
+  .badge {
+    display: inline-block; padding: 3px 10px; background: rgba(212,165,116,0.25);
+    border: 1px solid #d4a574; border-radius: 12px; font-size: 0.8rem; margin-top: 8px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    max-width: 1300px;
+    margin: 0 auto;
+    gap: 30px;
+    padding: 30px 20px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: sticky;
+    top: 20px;
+    height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .sidebar h3 { color: #1a365d; font-size: 0.95rem; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid #f0e8d8; }
+  .sidebar ol { list-style: none; counter-reset: step; }
+  .sidebar li { counter-increment: step; margin-bottom: 4px; }
+  .sidebar li a {
+    display: block;
+    color: #2d5a87;
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    transition: background 0.2s;
+  }
+  .sidebar li a:hover { background: #e8f0f8; }
+  .sidebar li a::before {
+    content: counter(step) ". ";
+    color: #d4a574;
+    font-weight: 700;
+  }
+
+  /* Main content */
+  .content {
+    background: white;
+    border-radius: 12px;
+    padding: 40px 50px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    min-width: 0;
+  }
+  .content section { margin-bottom: 60px; scroll-margin-top: 20px; }
+  .content h2 {
+    color: #1a365d;
+    font-size: 1.6rem;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #d4a574;
+  }
+  .content h3 {
+    color: #2d5a87;
+    font-size: 1.2rem;
+    margin-top: 28px;
+    margin-bottom: 12px;
+  }
+  .content p { margin-bottom: 12px; }
+  .content ul, .content ol { padding-left: 24px; margin-bottom: 16px; }
+  .content li { margin-bottom: 6px; }
+
+  /* Code block */
+  pre {
+    background: #1e293b;
+    color: #f1f5f9;
+    padding: 16px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 12px 0;
+    font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  code {
+    background: #f5f0e6;
+    color: #1a365d;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88em;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+  /* Callout boxes */
+  .tip {
+    background: #e8f4f8;
+    border-left: 4px solid #2196f3;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 16px 0;
+  }
+  .warn {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 16px 0;
+  }
+  .danger {
+    background: #f8d7da;
+    border-left: 4px solid #dc3545;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 16px 0;
+  }
+  .info {
+    background: #f0e8d8;
+    border-left: 4px solid #d4a574;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 16px 0;
+  }
+  .tip strong, .warn strong, .danger strong, .info strong { display: block; margin-bottom: 4px; }
+
+  /* Step indicator */
+  .step-num {
+    display: inline-block;
+    background: #d4a574;
+    color: white;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: 700;
+    margin-right: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+  }
+  th, td {
+    padding: 10px 14px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+  }
+  th { background: #f5f0e6; color: #1a365d; }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; }
+    .content { padding: 24px 20px; }
+  }
+
+  footer {
+    background: #1a365d;
+    color: #ccc;
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 0.9rem;
+  }
+  footer a { color: #d4a574; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🛠️ 나만의 봇 만들기 자습서</h1>
+  <p><strong>cha-bot-starterkit</strong> (Team Edition) — 16팀 비즈모델 경진대회용</p>
+  <p class="badge">Gemma4 + 서버 사이드 RAG (학생 비용 0원)</p>
+  <p style="margin-top:10px; font-size:0.9rem;">
+    <a href="https://github.com/sungbongju/cha-bot-starterkit">GitHub 레포</a> ·
+    <a href="https://github.com/sdkparkforbi/bizmodel-bots-2026">박교수님 메인</a>
+  </p>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <h3>📚 단계별 목차</h3>
+    <ol>
+      <li><a href="#step-1">사전 준비 (Node.js, Git)</a></li>
+      <li><a href="#step-2">GitHub 계정 + 레포 만들기</a></li>
+      <li><a href="#step-3">템플릿 클론 + 로컬 실행</a></li>
+      <li><a href="#step-4">환경 변수 설정 (.env)</a></li>
+      <li><a href="#step-5">수정 + GitHub 푸시</a></li>
+      <li><a href="#step-6">Vercel 배포</a></li>
+      <li><a href="#step-7">카카오 SDK 설정</a></li>
+      <li><a href="#step-8">RAG 데이터 수정 ⭐</a></li>
+      <li><a href="#step-9">VRoid 아바타 만들기</a></li>
+      <li><a href="#step-10">AI 코딩 도구로 페르소나 변경</a></li>
+      <li><a href="#step-11">완성! 봇 공유하기</a></li>
+    </ol>
+  </aside>
+
+  <main class="content">
+
+    <section>
+      <h2>📖 이 자습서가 박교수님 자습서와 다른 점</h2>
+      <p>
+        박교수님 메인 자습서 (<a href="https://sdkparkforbi.github.io/bizmodel-bots-2026/tutorial.html">bizmodel-bots-2026/tutorial.html</a>)와 거의 동일하지만 두 가지 핵심 차이가 있습니다:
+      </p>
+      <table>
+        <tr><th>항목</th><th>박교수님 자습서</th><th>이 자습서 (Team Edition)</th></tr>
+        <tr><td>LLM</td><td>OpenAI API (학생 본인 키 발급, 유료)</td><td><strong>Gemma4</strong> (미들턴 공유, 무료)</td></tr>
+        <tr><td>RAG 수정</td><td>SSH + <code>node add_to_rag.js</code></td><td><strong>웹 페이지</strong> (브라우저만)</td></tr>
+        <tr><td>학생 부담</td><td>OpenAI 토큰 비용 (월 5~10만원)</td><td><strong>0원</strong></td></tr>
+        <tr><td>16팀 격리</td><td>공유 파일 (충돌 위험)</td><td><strong>팀별 분리 파일</strong></td></tr>
+      </table>
+      <div class="info">
+        <strong>💡 Step 1, 2, 5, 6, 7, 9, 10, 11 은 박교수님 자습서와 동일합니다.</strong>
+        Step 3, 4, 8 만 다릅니다 (클론 URL · 환경변수 · RAG 수정 방법).
+      </div>
+    </section>
+
+    <!-- STEP 1 -->
+    <section id="step-1">
+      <h2><span class="step-num">1</span>사전 준비 — Node.js, Git 설치 확인</h2>
+
+      <p>CMD(명령 프롬프트)를 열고 다음 명령어를 입력해 설치 여부를 확인합니다.</p>
+
+      <h3>1-1. Node.js 확인</h3>
+      <pre><code>node --version
+npm --version</code></pre>
+      <p>버전이 표시되면 설치 완료 (예: <code>v20.10.0</code>).</p>
+      <p>없으면 → <a href="https://nodejs.org/ko" target="_blank">https://nodejs.org/ko</a> 에서 <strong>LTS 버전</strong> 다운로드.</p>
+
+      <h3>1-2. Git 확인</h3>
+      <pre><code>git --version</code></pre>
+      <p>버전 나오면 OK (예: <code>git version 2.49.0</code>).</p>
+      <p>없으면 → <a href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a></p>
+
+      <h3>1-3. 코드 에디터 (VS Code 권장)</h3>
+      <p><a href="https://code.visualstudio.com/" target="_blank">VS Code 다운로드</a></p>
+
+      <div class="tip">
+        <strong>💡 팁</strong>
+        Git 설치 시 "Git Bash" 도 함께 설치됩니다. CMD가 어려우면 Git Bash 써도 OK.
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section id="step-2">
+      <h2><span class="step-num">2</span>GitHub 계정 + 레포 만들기</h2>
+
+      <h3>2-1. GitHub 가입 (이미 있으면 건너뛰기)</h3>
+      <ol>
+        <li><a href="https://github.com/signup" target="_blank">https://github.com/signup</a> 접속</li>
+        <li>이메일 → 비밀번호 → 사용자명 입력</li>
+        <li>이메일 인증 완료</li>
+      </ol>
+
+      <h3>2-2. 새 레포지토리 만들기</h3>
+      <ol>
+        <li>로그인 후 우측 상단 <code>+</code> → <code>New repository</code></li>
+        <li>레포 이름: 본인 봇 이름 (예: <code>my-team-03-bot</code>)</li>
+        <li><strong>Public</strong> 선택 (Vercel 무료 배포 가능)</li>
+        <li>"Add a README file" <strong>체크 안 함</strong> (푸시 충돌 방지)</li>
+        <li><code>Create repository</code> 클릭</li>
+      </ol>
+
+      <h3>2-3. Git에 GitHub 계정 등록 (최초 1회)</h3>
+      <pre><code>git config --global user.name "본인_GitHub_사용자명"
+git config --global user.email "본인_이메일@example.com"</code></pre>
+    </section>
+
+    <!-- STEP 3 (DIFFERENT) -->
+    <section id="step-3">
+      <h2><span class="step-num">3</span>템플릿 클론 + 로컬 실행</h2>
+
+      <div class="info">
+        <strong>⭐ 박교수님 자습서와 다름</strong>
+        <code>cha-bot-starterkit</code> 을 클론합니다 (Team Edition: 서버 사이드 RAG + Gemma4 무료 백엔드).
+      </div>
+
+      <h3>3-1. 작업 폴더로 이동</h3>
+      <pre><code>cd C:\projects
+mkdir my-bot
+cd my-bot</code></pre>
+
+      <h3>3-2. 템플릿 클론</h3>
+      <pre><code>git clone https://github.com/sungbongju/cha-bot-starterkit.git .</code></pre>
+
+      <div class="warn">
+        <strong>⚠️ 주의</strong>
+        마지막에 <code>.</code> (점) 있음. 현재 폴더에 클론하라는 뜻.
+      </div>
+
+      <h3>3-3. 기존 .git 폴더 삭제 (내 레포로 새로 시작)</h3>
+      <pre><code>rmdir /s /q .git
+git init -b main</code></pre>
+
+      <h3>3-4. 의존성 설치</h3>
+      <pre><code>npm install</code></pre>
+      <p>약 1~3분 걸립니다.</p>
+
+      <h3>3-5. 로컬 실행</h3>
+      <pre><code>npm run dev</code></pre>
+      <p>브라우저에서 <code>http://localhost:5173</code> 접속 → 봇이 동작하면 성공!</p>
+
+      <div class="tip">
+        <strong>💡 종료</strong>
+        CMD에서 <code>Ctrl + C</code> → <code>Y</code> 입력
+      </div>
+    </section>
+
+    <!-- STEP 4 (DIFFERENT) -->
+    <section id="step-4">
+      <h2><span class="step-num">4</span>환경 변수 설정 (.env)</h2>
+
+      <div class="info">
+        <strong>⭐ 박교수님 자습서와 다름</strong>
+        OpenAI API 키 <strong>불필요</strong>. 대신 <code>TEAM_ID</code>(본인 팀 번호)와 <code>VITE_KAKAO_JS_KEY</code> 만 필요.
+      </div>
+
+      <h3>4-1. .env 파일 생성</h3>
+      <p>VS Code에서 프로젝트 폴더 열기 → 새 파일 <code>.env</code> 생성 → 다음 입력:</p>
+      <pre><code># 본인 팀 번호 (01 ~ 16, 박교수님께 받음)
+TEAM_ID=03
+
+# 카카오 JavaScript SDK 키 (Step 7에서 설정)
+VITE_KAKAO_JS_KEY=your_kakao_js_key_here</code></pre>
+
+      <h3>4-2. 본인 팀 번호 확인</h3>
+      <p>박교수님이 16팀 매핑을 공유했습니다. 본인 팀 찾기:</p>
+      <table>
+        <tr><th>팀 번호</th><th>봇 이름</th><th>학생</th></tr>
+        <tr><td>01</td><td>🍚 식구</td><td>김수연</td></tr>
+        <tr><td>02</td><td>🚕 택씨</td><td>최문혁</td></tr>
+        <tr><td>03</td><td>📊 분개해</td><td>21학번 F5</td></tr>
+        <tr><td>04</td><td>⚠️ 잠깐만</td><td>김리원</td></tr>
+        <tr><td>05</td><td>⛵ 장보고</td><td>김영연</td></tr>
+        <tr><td>06</td><td>Δ 그릭</td><td>에브리옵션</td></tr>
+        <tr><td>07</td><td>🎾 나달</td><td>박시영</td></tr>
+        <tr><td>08</td><td>🎴 핀포커</td><td>핀포커스</td></tr>
+        <tr><td>09</td><td>🛡️ 지키미</td><td>첫 단추</td></tr>
+        <tr><td>10</td><td>💨 숨돌이</td><td>싹쓰리</td></tr>
+        <tr><td>11</td><td>🌾 곳간이</td><td>섭섭헌 진우</td></tr>
+        <tr><td>12</td><td>🎣 출조각</td><td>이성채</td></tr>
+        <tr><td>13</td><td>🌱 새로미</td><td>임예영</td></tr>
+        <tr><td>14</td><td>🏪 상도</td><td>지소윤</td></tr>
+        <tr><td>15</td><td>🤗 토닥이</td><td>권서영</td></tr>
+        <tr><td>16</td><td>🌿 하루</td><td>김하은</td></tr>
+      </table>
+
+      <div class="danger">
+        <strong>🚨 절대 주의</strong>
+        <code>.env</code> 파일은 GitHub에 올라가면 안 됩니다!<br>
+        <code>.gitignore</code>에 <code>.env</code>가 이미 포함되어 있는지 확인하세요.
+      </div>
+
+      <h3>4-3. .gitignore 확인</h3>
+      <pre><code>type .gitignore | findstr ".env"</code></pre>
+      <p><code>.env</code> 또는 <code>.env*</code>가 출력되면 OK.</p>
+
+      <div class="tip">
+        <strong>💡 카카오 키는 Step 7에서</strong>
+        카카오 키 발급 전이라 <code>VITE_KAKAO_JS_KEY</code> 부분은 일단 비워두거나 임시값으로 두셔도 됩니다. Step 7 에서 발급 후 채워넣으세요.
+      </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section id="step-5">
+      <h2><span class="step-num">5</span>수정 + GitHub 푸시</h2>
+
+      <h3>5-1. README 수정 (자기 봇 소개로)</h3>
+      <p>VS Code에서 <code>README.md</code> 열기 → 본인 봇 이름과 설명으로 수정.</p>
+
+      <h3>5-2. Git에 커밋</h3>
+      <pre><code>git add .
+git commit -m "Initial commit: 내 봇 시작"</code></pre>
+
+      <h3>5-3. GitHub 레포와 연결</h3>
+      <pre><code>git remote add origin https://github.com/본인_사용자명/my-team-03-bot.git
+git push -u origin main</code></pre>
+
+      <p>처음에는 GitHub 로그인 창이 뜹니다. 브라우저에서 인증하면 자동 푸시됩니다.</p>
+
+      <div class="tip">
+        <strong>💡 매번 푸시할 때</strong>
+        수정 후에는 다음 3줄만 반복:
+        <pre><code>git add .
+git commit -m "수정 내용"
+git push</code></pre>
+      </div>
+    </section>
+
+    <!-- STEP 6 (DIFFERENT — TEAM_ID env) -->
+    <section id="step-6">
+      <h2><span class="step-num">6</span>Vercel 배포</h2>
+
+      <div class="info">
+        <strong>⭐ 박교수님 자습서와 다름</strong>
+        OpenAI 키 대신 <code>TEAM_ID</code> 환경변수 설정. (Gemma4는 미들턴 공유 = 키 불필요)
+      </div>
+
+      <h3>6-1. Vercel 가입</h3>
+      <ol>
+        <li><a href="https://vercel.com/signup" target="_blank">https://vercel.com/signup</a> 접속</li>
+        <li><strong>"Continue with GitHub"</strong> 선택</li>
+        <li>권한 승인</li>
+      </ol>
+
+      <h3>6-2. 프로젝트 배포</h3>
+      <ol>
+        <li>대시보드에서 <code>Add New</code> → <code>Project</code></li>
+        <li>본인 GitHub 레포 (<code>my-team-03-bot</code>) 선택 → <code>Import</code></li>
+        <li>Framework Preset: <strong>Vite</strong> 자동 인식</li>
+        <li><strong>Environment Variables</strong> 펼치기 → 다음 2개 추가:
+          <table>
+            <tr><th>Name</th><th>Value</th></tr>
+            <tr><td><code>TEAM_ID</code></td><td><code>03</code> (본인 팀 번호 2자리)</td></tr>
+            <tr><td><code>VITE_KAKAO_JS_KEY</code></td><td>Step 7에서 발급할 키 (지금은 임시값 가능)</td></tr>
+          </table>
+        </li>
+        <li><code>Deploy</code> 클릭</li>
+      </ol>
+
+      <h3>6-3. 완료!</h3>
+      <p>1~3분 후 <code>https://my-team-03-bot.vercel.app</code> 같은 URL이 생성됩니다.</p>
+
+      <div class="tip">
+        <strong>💡 자동 재배포</strong>
+        앞으로 GitHub에 푸시할 때마다 Vercel이 자동 재배포합니다.
+      </div>
+    </section>
+
+    <!-- STEP 7 -->
+    <section id="step-7">
+      <h2><span class="step-num">7</span>카카오 SDK 설정 (공유 기능)</h2>
+
+      <p>카카오톡으로 봇을 친구에게 공유할 수 있게 하는 단계.</p>
+
+      <h3>7-1. Kakao Developers 가입</h3>
+      <ol>
+        <li><a href="https://developers.kakao.com/" target="_blank">https://developers.kakao.com/</a> 접속</li>
+        <li>카카오 계정으로 로그인</li>
+        <li><code>내 애플리케이션</code> → <code>애플리케이션 추가하기</code></li>
+        <li>앱 이름 입력 (예: "분개해 봇") → 생성</li>
+      </ol>
+
+      <h3>7-2. JavaScript 키 복사</h3>
+      <p>앱 선택 → <code>요약 정보</code> → <strong>JavaScript 키</strong> 복사</p>
+
+      <h3>7-3. 사이트 도메인 등록</h3>
+      <ol>
+        <li>좌측 <code>플랫폼</code> → <code>Web 플랫폼 등록</code></li>
+        <li>사이트 도메인에 본인 Vercel URL 입력:
+          <pre><code>https://my-team-03-bot.vercel.app</code></pre>
+        </li>
+      </ol>
+
+      <h3>7-4. Vercel 환경변수 업데이트</h3>
+      <p>Vercel 대시보드 → 본인 프로젝트 → <code>Settings</code> → <code>Environment Variables</code>:</p>
+      <ul>
+        <li><code>VITE_KAKAO_JS_KEY</code> 값을 복사한 JavaScript 키로 교체</li>
+        <li><code>Save</code> 후 <code>Deployments</code> → 최근 배포 <code>Redeploy</code></li>
+      </ul>
+
+      <div class="info">
+        <strong>💡 코드 수정 불필요</strong>
+        Team Edition 은 카카오 키를 <code>index.html</code>에 박지 않고 환경변수로 받습니다.
+        Vercel env 만 바꾸면 즉시 반영.
+      </div>
+    </section>
+
+    <!-- STEP 8 (DIFFERENT — WEB UI) -->
+    <section id="step-8">
+      <h2><span class="step-num">8</span>RAG 데이터 수정 — 나만의 지식 넣기 ⭐</h2>
+
+      <div class="info">
+        <strong>⭐ 박교수님 자습서와 가장 큰 차이</strong>
+        SSH/Node 스크립트 <strong>전혀 사용 안 함</strong>. 웹 페이지에서 청크 붙여넣고 버튼 클릭만.
+      </div>
+
+      <h3>8-1. 본인 팀 RAG 관리 페이지 접속</h3>
+      <p>브라우저에서 (팀 번호 03이면):</p>
+      <pre><code>https://middleton.p-e.kr/finbot/team/03/rag</code></pre>
+      <p>본인 팀 번호로 바꿔서 접속하세요.</p>
+
+      <h3>8-2. 청크 형식 이해</h3>
+      <p>JSONL 형식 (한 줄당 하나의 JSON). 예시 (분개해 봇):</p>
+      <pre><code>{"id":"acc-001","question":"분개가 뭐예요?","answer":"거래를 차변과 대변으로 나누어 기록하는 회계 절차입니다."}
+{"id":"acc-002","question":"차변과 대변의 차이?","answer":"차변(왼쪽)은 자산 증가/부채 감소, 대변(오른쪽)은 자산 감소/부채 증가를 기록합니다."}</code></pre>
+
+      <h3>8-3. 본인 봇용 청크 만들기</h3>
+      <ol>
+        <li>본인 봇 주제 청크 50~100개 작성 (메모장 또는 VS Code)</li>
+        <li>JSONL 형식: 한 줄에 하나의 JSON</li>
+        <li>각 필드:
+          <ul>
+            <li><strong>id</strong>: 고유 식별자 (예: "acc-001")</li>
+            <li><strong>question</strong>: 사용자가 물어볼 만한 자연어 질문</li>
+            <li><strong>answer</strong>: 짧고 구체적 (2~5줄)</li>
+            <li><strong>section</strong> (선택): 카테고리</li>
+          </ul>
+        </li>
+      </ol>
+
+      <div class="tip">
+        <strong>💡 AI로 청크 만들기</strong>
+        ChatGPT/Claude에 다음 프롬프트:<br>
+        <em>"분개해 봇 (회계 학습 친구) 에 쓸 RAG 청크 50개를 JSONL 형식으로 만들어줘. 형식: <code>{"id":"...","question":"...","answer":"..."}</code>"</em>
+      </div>
+
+      <h3>8-4. 웹 페이지에서 청크 추가</h3>
+      <ol>
+        <li>웹 페이지 (위 URL) 열기</li>
+        <li>본인 봇 정보 확인 (팀 번호, 봇 이름, 학생 이름)</li>
+        <li>큰 텍스트 영역에 JSONL 청크 붙여넣기</li>
+        <li><strong>팀 키</strong> 입력 (박교수님께 별도 받음, 예: <code>team-03-9478c414d6f8eab9</code>)</li>
+        <li><code>청크 추가</code> 버튼 클릭</li>
+        <li>임베딩 자동 생성 (청크 수 × 0.5초)</li>
+        <li>"N개 추가됨. 총 N개." 메시지 → 성공!</li>
+      </ol>
+
+      <h3>8-5. 봇에서 확인</h3>
+      <p>본인 봇 사이트 (<code>https://my-team-03-bot.vercel.app</code>) 새로고침 → 질문 → RAG 활용 답변 확인.</p>
+
+      <div class="warn">
+        <strong>⚠️ JSON 형식 오류 주의</strong>
+        한 줄에 하나의 JSON, 큰따옴표 (작은따옴표 X), 마지막 쉼표 없음.
+        오류 있으면 웹 페이지가 "JSON 신택스 에러" 보여줍니다.
+      </div>
+
+      <div class="info">
+        <strong>📌 다른 팀에 영향 없음</strong>
+        본인 팀 키로만 본인 팀 파일에 추가됩니다.
+        16팀 데이터는 서로 완전히 분리되어 있습니다.
+      </div>
+    </section>
+
+    <!-- STEP 9 -->
+    <section id="step-9">
+      <h2><span class="step-num">9</span>VRoid 아바타 만들기</h2>
+
+      <p>봇의 3D 캐릭터를 본인 봇 페르소나에 맞게 만듭니다.</p>
+
+      <h3>9-1. VRoid Studio 다운로드</h3>
+      <ol>
+        <li><a href="https://vroid.com/en/studio" target="_blank">https://vroid.com/en/studio</a> 접속</li>
+        <li>Windows / Mac 버전 다운로드 (무료)</li>
+        <li>설치 후 실행</li>
+      </ol>
+
+      <h3>9-2. 캐릭터 만들기</h3>
+      <ol>
+        <li><code>New</code> → 기본 캐릭터 선택 (Female/Male Sample)</li>
+        <li>좌측 메뉴에서 외형 커스터마이즈 (Face / Hair / Body / Outfit / Accessories)</li>
+        <li>본인 봇 페르소나에 맞게 디자인
+          <ul>
+            <li>분개해 → 학생 같은 단정한 캐릭터</li>
+            <li>상도 → 한복 + 정장 (시대 혼합)</li>
+            <li>토닥이 → 보들보들 핑크 캐릭터</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>9-3. VRM으로 Export</h3>
+      <ol>
+        <li>좌측 상단 <code>☰</code> → <code>Export</code> → <code>Export as VRM</code></li>
+        <li>VRM 1.0 선택</li>
+        <li>라이선스 화면에서:
+          <ul>
+            <li><strong>Avatar Permission</strong>: Everyone</li>
+            <li><strong>Commercial Usage</strong>: Allow</li>
+            <li><strong>Modification</strong>: Allow</li>
+            <li><strong>Redistribution</strong>: Allow</li>
+          </ul>
+        </li>
+        <li>파일명 <code>avatar.vrm</code> 으로 저장</li>
+      </ol>
+
+      <h3>9-4. 프로젝트에 적용</h3>
+      <p>저장한 <code>avatar.vrm</code> 파일을 본인 프로젝트의 <code>public/</code> 폴더에 복사.</p>
+      <pre><code>copy "%USERPROFILE%\Desktop\avatar.vrm" "C:\projects\my-bot\public\avatar.vrm"</code></pre>
+      <p>그리고 푸시:</p>
+      <pre><code>git add public/avatar.vrm
+git commit -m "Add my VRoid avatar"
+git push</code></pre>
+      <p>1~3분 후 Vercel 자동 재배포 → 새 아바타 등장.</p>
+    </section>
+
+    <!-- STEP 10 -->
+    <section id="step-10">
+      <h2><span class="step-num">10</span>AI 코딩 도구로 페르소나 변경</h2>
+
+      <p>봇의 말투, 성격, 대화 스타일을 AI 도구로 한 번에 바꿉니다.</p>
+
+      <h3>10-1. 페르소나 설정 위치</h3>
+      <p>Team Edition 에서는 페르소나(시스템 프롬프트)가 두 곳에 있을 수 있습니다:</p>
+      <ul>
+        <li><strong>RAG 청크 자체</strong>: 봇 인사말/소개를 첫 청크로 등록 (가장 쉬움)</li>
+        <li><strong>미들턴 백엔드</strong>: 박교수님과 협의해서 팀별 시스템 프롬프트 커스터마이즈 가능</li>
+      </ul>
+
+      <h3>10-2. 청크로 페르소나 정의 (추천)</h3>
+      <p>웹 RAG 관리 페이지에서 첫 청크로:</p>
+      <pre><code>{"id":"persona-01","question":"안녕","answer":"안녕! 나는 '분개해' 봇이야. 회계 분개 풀어주는 학습 친구야. 어떤 문제 같이 풀어볼래?"}
+{"id":"persona-02","question":"너는 누구야","answer":"21학번 F5 팀이 만든 회계 학습 봇 '분개해'예요. 분개 문제 입력하면 차변/대변 풀이와 설명을 드려요."}</code></pre>
+
+      <h3>10-3. (고급) AI 코딩 도구</h3>
+      <p>코드 자체를 수정하려면:</p>
+      <ul>
+        <li><a href="https://claude.com/claude-code" target="_blank">Claude Code (CLI)</a> — 가장 강력</li>
+        <li><a href="https://chatgpt.com" target="_blank">ChatGPT</a> — 코드 복붙</li>
+        <li><a href="https://gemini.google.com" target="_blank">Google Gemini</a></li>
+      </ul>
+
+      <p>Team Edition 의 경우 백엔드(미들턴)에 system prompt 가 있어서, 학생이 직접 수정하긴 어렵습니다. RAG 청크로 페르소나를 표현하는 게 가장 실용적.</p>
+    </section>
+
+    <!-- STEP 11 -->
+    <section id="step-11">
+      <h2><span class="step-num">11</span>완성! 봇 공유하기</h2>
+
+      <h3>11-1. 최종 체크리스트</h3>
+      <table>
+        <tr><th>항목</th><th>확인</th></tr>
+        <tr><td>GitHub 레포에 코드 푸시 완료</td><td>✅</td></tr>
+        <tr><td>Vercel 배포 성공 + TEAM_ID 환경변수 설정</td><td>✅</td></tr>
+        <tr><td>카카오 SDK 키 본인 것 (VITE_KAKAO_JS_KEY)</td><td>✅</td></tr>
+        <tr><td>RAG 청크 50개 이상 추가</td><td>✅</td></tr>
+        <tr><td>VRM 아바타 교체</td><td>✅</td></tr>
+        <tr><td>봇 사이트에서 질문 → RAG 활용 답변 확인</td><td>✅</td></tr>
+      </table>
+
+      <h3>11-2. 친구에게 공유</h3>
+      <p>Vercel URL을 카카오톡으로:</p>
+      <ul>
+        <li>URL: <code>https://my-team-03-bot.vercel.app</code></li>
+        <li>QR 생성: <a href="https://www.qr-code-generator.com" target="_blank">qr-code-generator.com</a></li>
+      </ul>
+
+      <h3>11-3. 개선 사이클</h3>
+      <ol>
+        <li>친구 피드백 수집 ("이런 질문에 답 못해" 등)</li>
+        <li>RAG 페이지에서 청크 추가 (5초 × 청크 수)</li>
+        <li>봇 사이트 새로고침 → 즉시 반영</li>
+        <li>반복!</li>
+      </ol>
+
+      <div class="tip">
+        <strong>🎉 축하합니다!</strong>
+        이제 본인만의 AI 친구 봇이 인터넷에 살아 있습니다. 🤖
+      </div>
+    </section>
+
+    <section>
+      <h2>📚 추가 자료</h2>
+      <ul>
+        <li><a href="https://github.com/sungbongju/cha-bot-starterkit">cha-bot-starterkit (이 자습서의 베이스)</a></li>
+        <li><a href="https://github.com/sdkparkforbi/bizmodel-bots-2026">박교수님 16팀 자습서</a></li>
+        <li><a href="https://github.com/sdkparkforbi/cha-interview-bot-liveavatar-my">박교수님 자습서 원본 템플릿</a></li>
+        <li><a href="https://react.dev/learn" target="_blank">React 공식 문서</a></li>
+        <li><a href="https://vroid.com/en/studio" target="_blank">VRoid Studio</a></li>
+        <li><a href="https://vercel.com/docs" target="_blank">Vercel 문서</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🆘 자주 겪는 문제</h2>
+
+      <h3>Q1: 봇 채팅이 작동하지 않습니다</h3>
+      <ul>
+        <li>Vercel 환경변수 <code>TEAM_ID</code> 가 본인 팀 번호로 설정되어 있는지 확인</li>
+        <li>Vercel <code>Deployments</code> → 최근 배포 로그에서 에러 확인</li>
+        <li>브라우저 콘솔(F12) 에서 빨간 메시지 확인</li>
+      </ul>
+
+      <h3>Q2: RAG 청크 추가 페이지에서 "403 팀 키가 일치하지 않습니다"</h3>
+      <ul>
+        <li>박교수님께 받은 본인 팀 키 정확히 입력했는지 확인</li>
+        <li>키 형식: <code>team-XX-xxxxxxxxx</code> (XX는 팀 번호)</li>
+        <li>공백/줄바꿈 없이 복사</li>
+      </ul>
+
+      <h3>Q3: 봇이 RAG 청크를 무시하고 일반 답변만 합니다</h3>
+      <ul>
+        <li>청크 추가 후 "총 N개" 메시지 확인 (실제 저장됐는지)</li>
+        <li>질문이 청크 question 과 의미적으로 비슷한지 (코사인 유사도 임계값)</li>
+        <li>청크 수가 너무 적으면 (5개 이하) 매칭이 안 잡힐 수 있음 — 30개 이상 권장</li>
+      </ul>
+
+      <h3>Q4: 카카오 공유 버튼이 작동하지 않음</h3>
+      <ul>
+        <li>Vercel 환경변수 <code>VITE_KAKAO_JS_KEY</code> 확인</li>
+        <li>Kakao Developers 의 Web 플랫폼에 Vercel URL 등록 확인</li>
+      </ul>
+
+      <h3>Q5: VRM 아바타가 안 보입니다 ("아바타가 비어있어요")</h3>
+      <ul>
+        <li><code>public/avatar.vrm</code> 파일 존재 + git 에 푸시됐는지 확인</li>
+        <li>Vercel <code>Deployments</code> → <code>Source</code> → <code>public/avatar.vrm</code> 있는지</li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>cha-bot-starterkit (Team Edition) · 2026 BizModel Bots</p>
+  <p><a href="https://github.com/sungbongju/cha-bot-starterkit">GitHub</a> · 박교수님 메인 자습서: <a href="https://sdkparkforbi.github.io/bizmodel-bots-2026/tutorial.html">tutorial.html</a></p>
+</footer>
+
+</body>
+</html>
