@@ -205,15 +205,15 @@
     <h3>📚 단계별 목차</h3>
     <ol>
       <li><a href="#step-1">사전 준비 (Node.js, Git)</a></li>
-      <li><a href="#step-2">GitHub 계정 + 레포 만들기</a></li>
-      <li><a href="#step-3">템플릿 클론 + 로컬 실행</a></li>
-      <li><a href="#step-4">환경 변수 설정 (.env)</a></li>
-      <li><a href="#step-5">수정 + GitHub 푸시</a></li>
+      <li><a href="#step-2">GitHub 계정 + Git config</a></li>
+      <li><a href="#step-3">템플릿 클론</a></li>
+      <li><a href="#step-4">환경 변수 (.env, 선택)</a></li>
+      <li><a href="#step-5">본인 레포 만들기 + 푸시</a></li>
       <li><a href="#step-6">Vercel 배포</a></li>
       <li><a href="#step-7">카카오 SDK (로그인 + 공유)</a></li>
-      <li><a href="#step-8">RAG 데이터 수정 ⭐</a></li>
-      <li><a href="#step-9">VRoid 아바타 만들기</a></li>
-      <li><a href="#step-10">AI 코딩 도구로 페르소나 변경</a></li>
+      <li><a href="#step-8">RAG 청크 업로드 ⭐</a></li>
+      <li><a href="#step-9">VRoid 아바타 적용</a></li>
+      <li><a href="#step-10">페르소나 다듬기</a></li>
       <li><a href="#step-11">완성! 봇 공유하기</a></li>
     </ol>
   </aside>
@@ -302,30 +302,43 @@ git config --global user.email "본인_이메일@example.com"</code></pre>
       <pre><code>cd C:\projects
 mkdir my-bot
 cd my-bot</code></pre>
+      <p><code>C:\projects</code> 폴더가 없으면 먼저 만들기: <code>mkdir C:\projects</code></p>
 
       <h3>3-2. 템플릿 클론</h3>
       <pre><code>git clone https://github.com/sungbongju/cha-bot-starterkit.git .</code></pre>
 
       <div class="warn">
         <strong>⚠️ 주의</strong>
-        마지막에 <code>.</code> (점) 있음. 현재 폴더에 클론하라는 뜻.
+        마지막에 <code>.</code> (점) 있음. 현재 폴더에 클론하라는 뜻. 점 빼면 <code>cha-bot-starterkit/</code> 하위 폴더가 새로 생깁니다.
       </div>
 
       <h3>3-3. 기존 .git 폴더 삭제 (내 레포로 새로 시작)</h3>
       <pre><code>rmdir /s /q .git
 git init -b main</code></pre>
+      <p>원본 템플릿의 git 히스토리를 끊고, 본인 레포로 다시 시작합니다.</p>
 
-      <h3>3-4. 의존성 설치</h3>
-      <pre><code>npm install</code></pre>
-      <p>약 1~3분 걸립니다.</p>
+      <div class="info">
+        <strong>📂 지금 폴더 구조</strong>
+<pre style="margin:8px 0 0;background:#fff;padding:8px;border-radius:4px;font-family:monospace;font-size:12px">C:\projects\my-bot\          ← 본인 작업 폴더 (계속 여기서 작업)
+  ├─ public\
+  │   └─ avatar.vrm          ← Step 9에서 본인 VRM 여기에 넣음
+  ├─ src\                    ← 코드 (수정 안 해도 됨!)
+  ├─ api\                    ← Vercel 서버리스 함수
+  ├─ index.html
+  └─ package.json</pre>
+      </div>
 
-      <h3>3-5. 로컬 실행</h3>
-      <pre><code>npm run dev</code></pre>
-      <p>브라우저에서 <code>http://localhost:5173</code> 접속 → 봇이 동작하면 성공!</p>
+      <h3>3-4. (선택) 로컬에서 실행해보기</h3>
+      <p>Vercel 배포로 바로 가도 되지만, 로컬에서 미리 보고 싶으면:</p>
+      <pre><code>npm install
+npm run dev</code></pre>
+      <p><code>npm install</code> 은 1~3분 소요. 끝나면 <code>http://localhost:5173</code> 접속.</p>
+      <p>채팅/음성은 Vercel 배포 후에만 작동 (백엔드 호출 필요). 아바타 화면만 확인 가능.</p>
+      <p>종료: CMD에서 <code>Ctrl + C</code> → <code>Y</code></p>
 
       <div class="tip">
-        <strong>💡 종료</strong>
-        CMD에서 <code>Ctrl + C</code> → <code>Y</code> 입력
+        <strong>💡 학생들 대부분 이 단계 스킵해도 OK</strong>
+        <code>npm install</code> 은 500MB 디스크 사용 + 시간 걸립니다. Vercel 배포 (Step 6) 가 어차피 빌드해주므로 로컬 테스트 굳이 안 해도 됩니다.
       </div>
     </section>
 
@@ -338,7 +351,12 @@ git init -b main</code></pre>
         OpenAI API 키 <strong>불필요</strong>. 대신 <code>TEAM_ID</code>(본인 팀 번호)와 <code>VITE_KAKAO_JS_KEY</code> 만 필요.
       </div>
 
-      <h3>4-1. .env 파일 생성</h3>
+      <div class="warn">
+        <strong>⚡ 이 단계는 선택입니다 (로컬 실행할 때만 필요)</strong>
+        Vercel 배포 (Step 6)에 환경변수를 직접 등록할 거라, 로컬에서 <code>npm run dev</code> 안 하면 <code>.env</code> 파일은 만들 필요 없습니다. 본인 팀 번호 확인만 (4-2) 하고 Step 5로 넘어가도 OK.
+      </div>
+
+      <h3>4-1. (선택) .env 파일 생성</h3>
       <p>VS Code에서 프로젝트 폴더 열기 → 새 파일 <code>.env</code> 생성 → 다음 입력:</p>
       <pre><code># 본인 팀 번호 (01 ~ 16, 박교수님께 받음)
 TEAM_ID=03
@@ -386,20 +404,35 @@ VITE_KAKAO_JS_KEY=your_kakao_js_key_here</code></pre>
 
     <!-- STEP 5 -->
     <section id="step-5">
-      <h2><span class="step-num">5</span>수정 + GitHub 푸시</h2>
+      <h2><span class="step-num">5</span>본인 GitHub 레포 만들기 + 푸시</h2>
 
-      <h3>5-1. README 수정 (자기 봇 소개로)</h3>
-      <p>VS Code에서 <code>README.md</code> 열기 → 본인 봇 이름과 설명으로 수정.</p>
+      <h3>5-1. GitHub 에서 빈 레포 만들기 (브라우저)</h3>
+      <ol>
+        <li><a href="https://github.com/new" target="_blank">https://github.com/new</a> 접속</li>
+        <li><strong>Repository name</strong>: 본인 봇 이름 (예: <code>my-team-03-bot</code>)</li>
+        <li><strong>Public</strong> 선택</li>
+        <li><strong>체크박스 모두 OFF</strong> — README, .gitignore, license 다 끄기 (켜면 push 시 충돌)</li>
+        <li><code>Create repository</code> 클릭</li>
+        <li>생성된 페이지 URL 복사: <code>https://github.com/본인_사용자명/my-team-03-bot.git</code></li>
+      </ol>
 
-      <h3>5-2. Git에 커밋</h3>
+      <h3>5-2. (선택) README 수정</h3>
+      <p>VS Code에서 <code>README.md</code> 열기 → 본인 봇 이름과 설명으로 수정. 안 해도 됨.</p>
+
+      <h3>5-3. Git에 커밋</h3>
       <pre><code>git add .
 git commit -m "Initial commit: 내 봇 시작"</code></pre>
 
-      <h3>5-3. GitHub 레포와 연결</h3>
+      <h3>5-4. 본인 GitHub 레포와 연결 + 푸시</h3>
       <pre><code>git remote add origin https://github.com/본인_사용자명/my-team-03-bot.git
 git push -u origin main</code></pre>
 
-      <p>처음에는 GitHub 로그인 창이 뜹니다. 브라우저에서 인증하면 자동 푸시됩니다.</p>
+      <p>처음 푸시할 때 GitHub 로그인 창이 뜹니다. 브라우저에서 본인 계정으로 인증하면 자동 푸시됩니다.</p>
+
+      <div class="warn">
+        <strong>⚠️ 학생들 흔한 에러 — "Updates were rejected" 또는 "remote rejected"</strong>
+        보통 5-1에서 체크박스를 켜서 (README 자동 생성) 발생합니다. 해결: <code>git pull origin main --allow-unrelated-histories</code> 후 다시 <code>git push</code>.
+      </div>
 
       <div class="tip">
         <strong>💡 매번 푸시할 때</strong>
@@ -407,6 +440,15 @@ git push -u origin main</code></pre>
         <pre><code>git add .
 git commit -m "수정 내용"
 git push</code></pre>
+      </div>
+
+      <div class="info" style="background:#fef3c7;border-color:#f59e0b">
+        <strong>🛠 [고급] GitHub 계정 여러 개 쓰는 경우 (시연자/운영자용)</strong>
+        주계정 자격증명이 이미 캐시되어 있으면 부계정 레포로 푸시 시 <code>403 Permission denied</code> 에러가 납니다.<br>
+        해결: remote URL에 사용자명을 박아서 자격증명을 계정별로 분리:
+        <pre><code>git remote set-url origin https://본인_사용자명@github.com/본인_사용자명/my-team-03-bot.git
+git push -u origin main</code></pre>
+        브라우저 인증 창이 새로 뜨면 해당 계정으로 로그인. 한 번만 박으면 영구 적용.
       </div>
     </section>
 
@@ -443,6 +485,18 @@ git push</code></pre>
 
       <h3>6-3. 완료!</h3>
       <p>1~3분 후 <code>https://my-team-03-bot.vercel.app</code> 같은 URL이 생성됩니다.</p>
+
+      <div class="info">
+        <strong>💡 URL에 이상한 단어가 붙어있나요? (예: <code>my-bot-self-psi.vercel.app</code>)</strong>
+        Vercel은 URL이 다른 사용자와 충돌하면 자동으로 단어를 추가합니다. 정상이에요.
+        깔끔하게 바꾸려면 Vercel 대시보드 → <code>Settings</code> → <code>General</code> → <code>Project Name</code> 변경 (URL도 같이 바뀜).<br>
+        ⚠️ URL 바꾸면 Step 7 에서 카카오 도메인 등록도 새 URL로 다시 해야 함.
+      </div>
+
+      <div class="warn">
+        <strong>📌 본인 Vercel URL 메모해두세요</strong>
+        Step 7 (카카오), Step 8 (RAG), Step 11 (공유) 모두에서 이 URL이 필요합니다. 메모장에 임시 저장.
+      </div>
 
       <div class="tip">
         <strong>💡 자동 재배포</strong>
@@ -499,12 +553,22 @@ git push</code></pre>
         Step 7-4 의 "카카오 로그인 활성화" 안 하면 봇 첫 방문 시 로그인 모달에서 카카오 버튼 누르면 에러 ("앱 정보가 정확하지 않음"). 반드시 활성화하세요.
       </div>
 
-      <h3>7-4. Vercel 환경변수 업데이트</h3>
-      <p>Vercel 대시보드 → 본인 프로젝트 → <code>Settings</code> → <code>Environment Variables</code>:</p>
-      <ul>
-        <li><code>VITE_KAKAO_JS_KEY</code> 값을 복사한 JavaScript 키로 교체</li>
-        <li><code>Save</code> 후 <code>Deployments</code> → 최근 배포 <code>Redeploy</code></li>
-      </ul>
+      <h3>7-5. Vercel 환경변수 업데이트 + Redeploy</h3>
+      <ol>
+        <li>Vercel 대시보드 → 본인 프로젝트 → <code>Settings</code> → <code>Environment Variables</code></li>
+        <li><code>VITE_KAKAO_JS_KEY</code> 항목 우측 <code>⋯</code> → <code>Edit</code></li>
+        <li>값을 7-2에서 복사한 JavaScript 키 (32자리)로 교체 → <code>Save</code></li>
+        <li><code>Deployments</code> 탭 → 최상단 배포 → <code>⋯</code> → <code>Redeploy</code> 클릭</li>
+        <li>2~3분 후 배포 완료</li>
+      </ol>
+
+      <h3>7-6. 동작 확인</h3>
+      <ol>
+        <li>본인 Vercel URL 접속</li>
+        <li>자동으로 로그인 모달이 뜸</li>
+        <li><strong>카카오로 로그인</strong> 클릭 → 카카오 인증 팝업</li>
+        <li>권한 동의 → 모달 자동 닫힘 → 봇과 대화 시작 가능</li>
+      </ol>
 
       <div class="info">
         <strong>💡 코드 수정 불필요</strong>
@@ -552,24 +616,40 @@ git push</code></pre>
         <em>"분개해 봇 (회계 학습 친구) 에 쓸 RAG 청크 50개를 JSONL 형식으로 만들어줘. 형식: <code>{"id":"...","question":"...","answer":"..."}</code>"</em>
       </div>
 
-      <h3>8-4. 웹 페이지에서 청크 추가</h3>
+      <h3>8-4. 청크 추가 — 파일 업로드 방식 (권장)</h3>
       <ol>
-        <li>웹 페이지 (위 URL) 열기</li>
-        <li>본인 봇 정보 확인 (팀 번호, 봇 이름, 학생 이름)</li>
-        <li>큰 텍스트 영역에 JSONL 청크 붙여넣기</li>
+        <li>본인 청크들을 <code>chunks.jsonl</code> 파일로 저장 (메모장에서 "다른 이름으로 저장" → 확장자 <code>.jsonl</code>, 인코딩 <strong>UTF-8</strong>)</li>
+        <li>웹 페이지 (위 URL) 열기 → 본인 봇 정보 확인</li>
+        <li><strong>📎 JSONL 파일 업로드</strong> 박스에서 <code>파일 선택</code> 클릭 → <code>chunks.jsonl</code> 선택</li>
+        <li>자동 검증 메시지 확인:
+          <ul>
+            <li>✅ "N개 청크 모두 유효" → 다음 단계로</li>
+            <li>⚠️ "줄 X: ..." → 해당 줄 수정 후 다시 업로드</li>
+          </ul>
+        </li>
         <li><strong>팀 키</strong> 입력 (박교수님께 별도 받음, 예: <code>team-03-9478c414d6f8eab9</code>)</li>
         <li><code>청크 추가</code> 버튼 클릭</li>
         <li>임베딩 자동 생성 (청크 수 × 0.5초)</li>
         <li>"N개 추가됨. 총 N개." 메시지 → 성공!</li>
       </ol>
 
+      <div class="tip">
+        <strong>💡 직접 입력도 가능</strong>
+        파일이 없으면 "미리보기 / 직접 입력" textarea 에 JSONL 을 직접 붙여넣고 추가도 가능합니다.
+      </div>
+
       <h3>8-5. 봇에서 확인</h3>
-      <p>본인 봇 사이트 (<code>https://my-team-03-bot.vercel.app</code>) 새로고침 → 질문 → RAG 활용 답변 확인.</p>
+      <p>본인 봇 사이트 (<code>https://my-team-03-bot.vercel.app</code>) 새로고침 → 청크의 question 과 비슷한 질문 입력 → RAG 활용 답변 확인.</p>
 
       <div class="warn">
         <strong>⚠️ JSON 형식 오류 주의</strong>
         한 줄에 하나의 JSON, 큰따옴표 (작은따옴표 X), 마지막 쉼표 없음.
-        오류 있으면 웹 페이지가 "JSON 신택스 에러" 보여줍니다.
+        오류 있으면 웹 페이지가 정확한 줄 번호 + 에러 메시지를 보여줍니다.
+      </div>
+
+      <div class="warn">
+        <strong>⚠️ 한글 깨짐 주의 — 파일 인코딩은 반드시 UTF-8</strong>
+        메모장 기본 저장 (ANSI) 으로 하면 한글이 깨져서 올라갑니다. VS Code 권장 (자동 UTF-8). 메모장이라면 "다른 이름으로 저장" 시 하단 인코딩 드롭다운 → <strong>UTF-8</strong> 선택.
       </div>
 
       <div class="info">
@@ -617,17 +697,52 @@ git push</code></pre>
             <li><strong>Redistribution</strong>: Allow</li>
           </ul>
         </li>
-        <li>파일명 <code>avatar.vrm</code> 으로 저장</li>
+        <li>파일명: 일단 본인이 원하는 이름 OK (예: <code>분개해.vrm</code>)</li>
+        <li>저장 위치 기억해두기 (보통 <code>Desktop</code> 또는 <code>Documents\VRoid\avatars</code>)</li>
       </ol>
 
-      <h3>9-4. 프로젝트에 적용</h3>
-      <p>저장한 <code>avatar.vrm</code> 파일을 본인 프로젝트의 <code>public/</code> 폴더에 복사.</p>
-      <pre><code>copy "%USERPROFILE%\Desktop\avatar.vrm" "C:\projects\my-bot\public\avatar.vrm"</code></pre>
-      <p>그리고 푸시:</p>
-      <pre><code>git add public/avatar.vrm
+      <h3>9-4. 프로젝트에 적용 ⚠️ 파일명 정확히 <code>avatar.vrm</code></h3>
+
+      <div class="danger">
+        <strong>🚨 파일명 규칙 (어기면 봇이 못 찾음)</strong>
+        <ul style="margin:6px 0">
+          <li>이름: 반드시 <code>avatar.vrm</code> (모두 소문자, <strong>한글 X</strong>)</li>
+          <li>위치: <code>C:\projects\my-bot\public\avatar.vrm</code></li>
+          <li>코드가 정확히 <code>/avatar.vrm</code> 으로 fetch함 — 이름 다르면 placeholder 표시</li>
+        </ul>
+      </div>
+
+      <p>저장한 VRM 파일을 본인 프로젝트의 <code>public/</code> 폴더에 <strong><code>avatar.vrm</code> 이름으로</strong> 복사:</p>
+
+      <pre><code>REM 예: 바탕화면의 "분개해.vrm" 을 my-bot/public/avatar.vrm 으로 복사
+copy "%USERPROFILE%\Desktop\분개해.vrm" "C:\projects\my-bot\public\avatar.vrm"
+
+REM 복사 확인
+dir C:\projects\my-bot\public\avatar.vrm</code></pre>
+
+      <p>파일 크기 표시되면 OK. 그리고 푸시:</p>
+      <pre><code>cd C:\projects\my-bot
+git add public/avatar.vrm
+git status
 git commit -m "Add my VRoid avatar"
 git push</code></pre>
+
+      <div class="info">
+        <strong>✅ <code>git status</code> 에서 <code>new file: public/avatar.vrm</code> 표시되어야 정상</strong>
+        안 보이면 파일이 잘못된 폴더에 있거나 이름이 다른 경우. 9-4 박스 다시 확인.
+      </div>
+
       <p>1~3분 후 Vercel 자동 재배포 → 새 아바타 등장.</p>
+
+      <div class="warn">
+        <strong>⚠️ "no upstream branch" 에러가 나면</strong>
+        <code>git push -u origin main</code> 로 한 번만 upstream 설정. 이후 <code>git push</code> 만으로 OK.
+      </div>
+
+      <div class="warn">
+        <strong>⚠️ VRM 파일이 25MB 초과면 git push 막힘</strong>
+        VRoid Studio 에서 텍스처 크기 줄여 (Materials → Texture Resolution 낮춤) 재 export.
+      </div>
     </section>
 
     <!-- STEP 10 -->

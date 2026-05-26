@@ -1,209 +1,110 @@
-# cha-bot-starterkit (Team Edition)
+# 🤖 cha-bot-starterkit
 
-> 박교수님 **2026 비즈모델 경진대회** 16팀용 봇 스타터킷.
-> 학생 **코드 수정 0곳**으로 본인 팀 봇 운영 — 클론 → Vercel 환경변수 2개 설정 → 끝.
+> 박교수님 **2026 비즈모델 경진대회 16팀**용 봇 스타터킷.
+> **코드 한 줄도 안 건드리고** 본인 봇 만들기.
 
-브라우저 사이드 VRoid VRM 아바타 + 스트리밍 채팅(SSE) + 음성(STT/TTS) +
-**팀별 격리된 서버 사이드 RAG** + 카카오 로그인/공유.
-
-Built on React 19 + Vite 8 + Three.js + [@pixiv/three-vrm](https://github.com/pixiv/three-vrm).
-LLM 백엔드: **미들턴 서버 Gemma4** (OpenAI 키 불필요, 16팀 공유 무료).
-
----
-
-## ✨ 학생이 받는 것
-
-| Feature | Status |
+| | |
 |---|---|
-| 3D VRoid VRM 아바타 렌더링 | ✅ (본인 `.vrm` 드롭만 하면 됨) |
-| 스트리밍 SSE 채팅 (토큰 단위 타이핑 효과) | ✅ |
-| 문장 단위 TTS 큐 + 병렬 pre-fetch | ✅ |
-| 3가지 모드: 대면(FTF) / 음성(STS) / 텍스트(TTT) | ✅ |
-| 봇 음성 중 ESC 인터럽트 | ✅ |
-| 카메라 캡처 (FTF 모드에서 비전 LLM 입력) | ✅ |
-| 카카오 로그인 + 공유 | ✅ |
-| **팀별 격리 RAG (서버 사이드)** | ✅ |
-| RAG 청크 추가 웹 페이지 | ✅ (SSH 불필요) |
-| 라이트/다크 테마 토글 | ✅ |
+| 🎨 **3D 아바타** | VRoid 캐릭터 (본인이 만든 거 그냥 올리면 됨) |
+| 💬 **AI 채팅** | 미들턴 Gemma4 — **무료 공유 (학생 비용 0원)** |
+| 🗣 **음성** | STT/TTS 자동 작동 |
+| 📚 **나만의 지식** | 웹페이지에서 청크 추가 → 봇이 우리 팀 답변 |
+| 💛 **카카오 공유** | 친구에게 봇 자랑하기 |
 
 ---
 
-## 🚀 Quick Start
+## ⚡ 만들기 5단계 (1시간)
 
-### 사전 준비
+### 1️⃣ 사전 준비
 
-- [Node.js 18+](https://nodejs.org/)
-- [Git](https://git-scm.com/downloads)
-- GitHub 계정, Vercel 계정, 카카오 디벨로퍼 계정
-- 본인 팀 번호 (01 ~ 16) — 박교수님께 받음
+- [Node.js](https://nodejs.org/) + [Git](https://git-scm.com/downloads) 설치
+- GitHub / Vercel / 카카오디벨로퍼 계정 가입
+- **본인 팀 번호** (01~16) — 박교수님께 받음
 
-### 1. 클론
+### 2️⃣ 레포 복사 + 푸시
 
-```bash
-git clone https://github.com/sungbongju/cha-bot-starterkit.git my-bot
+```cmd
+cd C:\projects
+mkdir my-bot
 cd my-bot
-rm -rf .git
+git clone https://github.com/sungbongju/cha-bot-starterkit.git .
+rmdir /s /q .git
 git init -b main
-```
-
-### 2. (선택) 로컬에서 확인
-
-```bash
-npm install
-npm run dev
-# http://localhost:5173 — 아바타 화면 확인
-```
-
-> 채팅은 Vercel 배포 후에만 동작 (Middleton 백엔드 호출).
-
-### 3. 본인 GitHub 레포에 푸시
-
-```bash
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/YOUR_USERNAME/my-bot.git
+git add . && git commit -m "내 봇 시작"
+git remote add origin https://github.com/[본인]/my-bot.git
 git push -u origin main
 ```
 
-### 4. Vercel 배포
+### 3️⃣ Vercel 배포
 
-[vercel.com](https://vercel.com) → New Project → 본인 레포 Import.
-**Environment Variables** 에 다음 2개 설정:
+[vercel.com](https://vercel.com) → **New Project** → 본인 레포 → **Environment Variables** 추가:
 
 | Name | Value |
 |---|---|
-| `TEAM_ID` | 본인 팀 번호 두 자리 (예: `03`) |
-| `VITE_KAKAO_JS_KEY` | 카카오 디벨로퍼에서 발급한 JavaScript 키 |
+| `TEAM_ID` | `03` (본인 팀 번호) |
+| `VITE_KAKAO_JS_KEY` | 카카오 JS 키 (Step 4에서) |
 
-Deploy 클릭 → 2~3분 후 배포 URL 발급.
+**Deploy** → 3분 후 배포 URL 발급.
 
-### 5. 카카오 설정
+### 4️⃣ 카카오 SDK
 
-카카오 디벨로퍼 콘솔에서:
-- 플랫폼: Web → 사이트 도메인에 Vercel URL 추가
-- 카카오 로그인 활성화 + Redirect URI 등록
-- 동의항목: 닉네임, 이메일
+[Kakao Developers](https://developers.kakao.com/) → 앱 생성 → JS 키 복사:
+1. **플랫폼 → Web** : 본인 Vercel URL 등록
+2. **카카오 로그인 ON** + Redirect URI (`Vercel URL/oauth`)
+3. **동의 항목**: 닉네임 필수
+4. Vercel env `VITE_KAKAO_JS_KEY` 교체 + **Redeploy**
 
-### 6. RAG 청크 추가 (본인 봇 페르소나 만들기)
-
-웹 페이지에서 직접 추가:
+### 5️⃣ RAG 청크 추가 (본인 봇 지식)
 
 ```
-https://middleton.p-e.kr/finbot/team/{TEAM_ID}/rag
+https://middleton.p-e.kr/finbot/team/[본인팀번호]/rag
 ```
 
-JSONL 형식으로 청크 입력 → API 키 (박교수님께 받음) → 저장.
+웹페이지에서 JSONL 파일 업로드 → 끝.
 
-### 7. 아바타 교체
+청크 예시 (`chunks.jsonl`):
+```jsonl
+{"id":"q1","question":"안녕","answer":"안녕! 나는 분개해 봇이야."}
+{"id":"q2","question":"분개가 뭐야","answer":"거래를 차변과 대변으로 나누는 거예요."}
+```
 
-[VRoid Studio](https://vroid.com/en/studio) 에서 본인 캐릭터 만들기 → VRM 익스포트
-→ `public/avatar.vrm` 으로 저장 → git push → Vercel 자동 재배포.
+> 💡 ChatGPT/Claude에 "내 봇 주제로 청크 50개 JSONL 만들어줘" 부탁하면 자동 생성됩니다.
+
+---
+
+## 🎨 본인 아바타 만들기 (선택)
+
+1. [VRoid Studio](https://vroid.com/en/studio) 설치 (무료)
+2. 캐릭터 만들기 → **Export as VRM**
+3. 라이선스 모두 **Allow**
+4. 파일명 `avatar.vrm`로 저장
+5. `public/avatar.vrm` 위치에 복사 → `git push`
+
+> VRoid 안 만들면 placeholder 아바타 표시.
 
 ---
 
 ## 📖 자세한 자습서
 
-**[docs/tutorial.html](docs/tutorial.html)** — 11단계 자습서 (박교수님 자습서 형식 그대로)
-
-박교수님 자습서 ([bizmodel-bots-2026](https://github.com/sdkparkforbi/bizmodel-bots-2026)) 와의 차이는 Step 3, 4, 8 세 단계뿐:
-- **Step 3**: 클론 URL이 `cha-bot-starterkit` (이 레포)
-- **Step 4**: OpenAI 키 불필요 / `TEAM_ID` env 추가
-- **Step 8**: SSH + 스크립트 대신 웹 페이지로 RAG 관리
-
----
-
-## 📁 프로젝트 구조
-
-```
-cha-bot-starterkit/
-├─ index.html                 entry HTML + Kakao SDK init
-├─ vite.config.js
-├─ vercel.json                SPA fallback
-├─ .env.example               env template
-│
-├─ public/
-│  └─ avatar.vrm              ⭐ 본인 VRM 여기 (없으면 placeholder)
-│
-├─ src/
-│  ├─ main.jsx                React entry
-│  ├─ App.jsx                 메인 — VRM + 채팅 + STT + TTS orchestration
-│  ├─ lib/
-│  │  ├─ api.js               session + auth
-│  │  └─ stt.js               MicRecorder
-│  └─ components/
-│     ├─ VRMAvatar.jsx        Three.js + three-vrm 렌더러 + 립싱크
-│     ├─ AvatarPanel.jsx      아바타 + 카메라 + 모드 토글 + 시작/종료
-│     ├─ ChatPanel.jsx        채팅 메시지 + 입력 + 마이크
-│     └─ AuthModal.jsx        카카오/이메일 로그인 모달
-│
-├─ api/                       Vercel serverless 함수 (Middleton 프록시)
-│  ├─ chat-stream.js          SSE LLM 스트림 → /api/team/{TEAM_ID}/chat-stream
-│  ├─ chat.js                 배치 LLM (fallback)
-│  ├─ tts.js                  text → audio
-│  ├─ stt.js                  audio → text
-│  └─ school-api.js           로그인/회원/세션 (Middleton finbot)
-│
-└─ docs/
-   └─ tutorial.html           학생용 11-step 자습서
-```
-
----
-
-## 🎨 커스터마이징 체크리스트
-
-| 바꾸고 싶은 것 | 수정 위치 |
-|---|---|
-| **아바타 캐릭터** | `public/avatar.vrm` 교체 |
-| **아바타 카메라 각도** | `src/components/VRMAvatar.jsx` (line 226-227) |
-| **봇 첫 인사 문구** | `src/App.jsx` — `GREETING_TEXT` / `GREETING_TTS` 상수 |
-| **페이지 제목 / favicon** | `index.html` |
-| **채팅 패널 타이틀** | `<ChatPanel title="..." />` prop |
-| **봇 페르소나 / 답변 스타일** | Middleton RAG 청크로 표현 (Step 6) |
-| **STT 도메인 단어 prime** | Vercel env `WHISPER_PROMPT` (쉼표 구분 단어 목록) |
-
----
-
-## 🛠 백엔드 (Middleton)
-
-학생이 직접 운영할 필요 없음. 박교수님이 16팀 공유로 미리 세팅:
-
-| Endpoint | 용도 |
-|---|---|
-| `/api/team/{id}/chat-stream` | SSE 스트리밍 채팅 (RAG + Gemma4) |
-| `/api/team/{id}/chat` | 배치 채팅 (fallback) |
-| `/whisper/v1/audio/transcriptions` | STT (faster-whisper-large-v3-turbo) |
-| `/api/tts` | TTS (OmniVoice) |
-| `/finbot/team/{id}/rag` | RAG 관리 웹 UI |
-
----
-
-## 📜 라이선스
-
-MIT.
-
-아바타 VRM 파일은 본인이 추가하는 것의 **자체 라이선스** 를 따릅니다.
-공개 배포 전 `allowRedistribution`, `commercialUsage`, `creditNotation` 메타데이터 확인 필수.
-
----
-
-## 🙏 Credits
-
-- **VRM 렌더링**: [@pixiv/three-vrm](https://github.com/pixiv/three-vrm)
-- **VRoid Studio**: [vroid.com/en/studio](https://vroid.com/en/studio)
-- **Team Edition 백엔드 + 자습서**: 성봉주 + Claude (Anthropic)
-- **박교수님 원본 자습서**: [bizmodel-bots-2026](https://github.com/sdkparkforbi/bizmodel-bots-2026)
+[**docs/tutorial.html**](docs/tutorial.html) — 11단계 그림 자습서
 
 ---
 
 ## 🆘 트러블슈팅
 
-| 증상 | 원인 |
+| 증상 | 원인 / 해결 |
 |---|---|
 | 아바타 자리에 placeholder | `public/avatar.vrm` 없음 → 추가 |
-| 채팅 시 network error | `TEAM_ID` env 누락 또는 잘못된 팀 번호 |
-| 카카오 로그인 안 됨 | `VITE_KAKAO_JS_KEY` 누락 또는 Redirect URI 미등록 |
-| 마이크 버튼 무반응 | 브라우저 마이크 권한 차단 → 사이트 권한 확인 |
-| 빌드 경고 "chunks larger than 500 kB" | 정상 (Three.js가 크기 때문) — 무시 |
-| RAG 청크 추가 시 권한 오류 | 팀별 API 키 (박교수님께 받음) 잘못됨 |
+| 채팅 안 됨 | Vercel env `TEAM_ID` 확인 |
+| 카카오 로그인 에러 | 카카오 디벨로퍼에서 Web 도메인 등록 + 로그인 활성화 |
+| RAG 청크 안 보임 | 본인 팀 번호 (TEAM_ID) 와 URL 팀번호 일치 확인 |
 
-이슈 → [GitHub Issues](https://github.com/sungbongju/cha-bot-starterkit/issues)
+---
+
+## 🙏 만든 사람
+
+- **백엔드 + 스타터킷**: 성봉주 + Claude (Anthropic)
+- **VRM 렌더링**: [@pixiv/three-vrm](https://github.com/pixiv/three-vrm)
+- **박교수님 자습서 원본**: [bizmodel-bots-2026](https://github.com/sdkparkforbi/bizmodel-bots-2026)
+
+MIT License.
