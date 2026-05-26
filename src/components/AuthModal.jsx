@@ -71,10 +71,10 @@ export default function AuthModal({ open, onClose, onSuccess }) {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.card} onClick={e => e.stopPropagation()}>
-        <div className={styles.logo}>👨‍🏫</div>
-        <h3 className={styles.title}>신입생 전공상담 봇</h3>
+        <div className={styles.logo}>🤖</div>
+        <h3 className={styles.title}>AI 챗봇</h3>
         <p className={styles.subtitle}>
-          차의과학대학교 신입생 전공상담<br/>전공·진로 상담을 시작해 보세요.
+          AI 챗봇과의 대화를 시작해 보세요.
         </p>
 
         {/* 동의 섹션 — 항상 노출 */}
@@ -92,7 +92,7 @@ export default function AuthModal({ open, onClose, onSuccess }) {
             <span>개인정보 수집 및 이용 동의 <em>(필수)</em></span>
           </label>
           <p className={styles.consentDetail}>
-            수집항목: 이름·이메일·카카오 닉네임 · 이용목적: AI 면담 상담 · 보유기간: 서비스 이용 종료 시 파기
+            수집항목: 이름·이메일·카카오 닉네임 · 이용목적: AI 챗봇 서비스 제공 · 보유기간: 서비스 이용 종료 시 파기
           </p>
           <label className={styles.consentItem}>
             <input type="checkbox" checked={consentMkt} onChange={e => setConsentMkt(e.target.checked)} />

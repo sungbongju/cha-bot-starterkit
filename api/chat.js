@@ -1,4 +1,4 @@
-// 면담봇 채팅 — Middleton RAG+Gemma4 프록시
+// Team 봇 채팅 (batch JSON) — Middleton RAG+Gemma4 프록시
 
 export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {

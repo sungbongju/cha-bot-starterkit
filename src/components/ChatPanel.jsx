@@ -114,7 +114,7 @@ export default function ChatPanel({
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <span className={styles.headerIcon}>💬</span>
-          <span className={styles.headerTitle}>면담 대화</span>
+          <span className={styles.headerTitle}>대화</span>
         </div>
         <div className={styles.userArea}>
           <button
@@ -178,7 +178,7 @@ export default function ChatPanel({
           onChange={handleInput}
           onKeyDown={handleKey}
           placeholder={
-            !connected ? '먼저 왼쪽의 [상담 시작] 버튼을 눌러주세요'
+            !connected ? '먼저 왼쪽의 [대화 시작] 버튼을 눌러주세요'
             : mode === 'ttt' ? '텍스트로 질문을 입력하세요…'
             : isListening ? '듣고 있어요…'
             : '궁금한 점을 입력하세요…'

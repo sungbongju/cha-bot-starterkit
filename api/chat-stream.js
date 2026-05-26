@@ -1,4 +1,4 @@
-// 면담봇 채팅 (streaming SSE) — Middleton finbot /api/interview-chat-stream 프록시
+// Team 봇 채팅 (streaming SSE) — Middleton /api/team/{TEAM_ID}/chat-stream 프록시
 //
 // 기존 /api/chat (batch JSON)는 유지 — 호환성 보존.
 // 이 endpoint는 LLM 토큰을 그대로 SSE로 흘려보내, 프론트에서 문장 단위 TTS 큐를
@@ -12,8 +12,8 @@
 //   data: {"done": true, "fullText": "..."}\n\n
 //   data: [DONE]\n\n
 
-// Team Edition: server-side per-team RAG (managed at /home/student04/finbot/server/data/teams/).
-// Each deployed bot sets TEAM_ID env var (e.g., "03" for 분개해).
+// Team Edition: server-side per-team RAG (managed on the Middleton server).
+// Each deployed bot sets TEAM_ID env var (two-digit team number, e.g., "01" ~ "16").
 // Backend route: /api/team/{TEAM_ID}/chat-stream  →  team-isolated RAG + Gemma4.
 // RAG is managed via web UI at: https://middleton.p-e.kr/finbot/team/{TEAM_ID}/rag
 const TEAM_ID = process.env.TEAM_ID || '00'   // 00 = no team configured (fallback)

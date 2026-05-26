@@ -20,10 +20,10 @@ const WHISPER_URL =
   'https://middleton.p-e.kr/whisper/v1/audio/transcriptions'
 const WHISPER_MODEL =
   process.env.WHISPER_MODEL || 'deepdml/faster-whisper-large-v3-turbo-ct2'
-// 차의과학대 도메인 단어들을 prompt로 prime — 고유명사 인식률 향상
-const WHISPER_PROMPT =
-  process.env.WHISPER_PROMPT ||
-  '차의과학대학교, 전공, 진로, 상담, 면담, 세포유전자재생의학, 바이오식의약학, 시스템생명과학, 스포츠의학, 심리학, 미술치료, 디지털보건의료, 경영학, 미디어커뮤니케이션학, AI의료데이터학, 소프트웨어융합'
+// Whisper prompt — 봇 도메인에 자주 등장하는 고유명사/전문용어를 환경변수로 주입하면
+// 인식률이 올라간다. 본인 봇 주제(예: 회계 용어, 낚시 용어, 학교명 등)에 맞춰
+// Vercel env WHISPER_PROMPT 에 쉼표로 구분된 단어 목록을 넣으세요. 비워두면 빈 prompt.
+const WHISPER_PROMPT = process.env.WHISPER_PROMPT || ''
 
 async function readRawBody(req) {
   const chunks = []

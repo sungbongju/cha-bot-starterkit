@@ -1,211 +1,209 @@
-# cha-bot-starter-kit
+# cha-bot-starterkit (Team Edition)
 
-> A clean starter kit for building **VRoid VRM-based AI assistant bots** —
-> browser-rendered 3D avatar, streaming chat, voice (STT/TTS), and three
-> conversation modes (face-to-face / speech / text).
+> 박교수님 **2026 비즈모델 경진대회** 16팀용 봇 스타터킷.
+> 학생 **코드 수정 0곳**으로 본인 팀 봇 운영 — 클론 → Vercel 환경변수 2개 설정 → 끝.
+
+브라우저 사이드 VRoid VRM 아바타 + 스트리밍 채팅(SSE) + 음성(STT/TTS) +
+**팀별 격리된 서버 사이드 RAG** + 카카오 로그인/공유.
 
 Built on React 19 + Vite 8 + Three.js + [@pixiv/three-vrm](https://github.com/pixiv/three-vrm).
-**Zero ongoing avatar cost** (VRM runs in the browser — no HeyGen / LiveAvatar fees).
+LLM 백엔드: **미들턴 서버 Gemma4** (OpenAI 키 불필요, 16팀 공유 무료).
 
 ---
 
-## ✨ What you get out of the box
+## ✨ 학생이 받는 것
 
 | Feature | Status |
 |---|---|
-| 3D VRoid VRM avatar rendering | ✅ ready (drop in your `.vrm` file) |
-| Auto lip-sync from TTS audio (RMS → 'aa' viseme) | ✅ |
-| Auto blinking + warm idle expression + chest breathing | ✅ |
-| Streaming SSE chat (token-by-token typing effect) | ✅ |
-| Sentence-level TTS queue with **parallel pre-fetch** | ✅ |
-| 3 modes: **FTF** (face-to-face) / **STS** (voice) / **TTT** (text) | ✅ |
-| ESC interrupt for bot speech | ✅ |
-| Camera capture for vision LLM (FTF mode) | ✅ |
-| Echo guard (mic pauses during bot speech) | ✅ |
-| Light / dark theme toggle | ✅ |
-| Optional chat history logging (env-gated) | ✅ |
+| 3D VRoid VRM 아바타 렌더링 | ✅ (본인 `.vrm` 드롭만 하면 됨) |
+| 스트리밍 SSE 채팅 (토큰 단위 타이핑 효과) | ✅ |
+| 문장 단위 TTS 큐 + 병렬 pre-fetch | ✅ |
+| 3가지 모드: 대면(FTF) / 음성(STS) / 텍스트(TTT) | ✅ |
+| 봇 음성 중 ESC 인터럽트 | ✅ |
+| 카메라 캡처 (FTF 모드에서 비전 LLM 입력) | ✅ |
+| 카카오 로그인 + 공유 | ✅ |
+| **팀별 격리 RAG (서버 사이드)** | ✅ |
+| RAG 청크 추가 웹 페이지 | ✅ (SSH 불필요) |
+| 라이트/다크 테마 토글 | ✅ |
 
 ---
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### 사전 준비
 
-- **Node.js** 18 or later — [download](https://nodejs.org/)
-- **Git** — [download](https://git-scm.com/downloads)
+- [Node.js 18+](https://nodejs.org/)
+- [Git](https://git-scm.com/downloads)
+- GitHub 계정, Vercel 계정, 카카오 디벨로퍼 계정
+- 본인 팀 번호 (01 ~ 16) — 박교수님께 받음
 
-### 1. Clone and install
+### 1. 클론
 
 ```bash
-git clone https://github.com/sungbongju/cha-bot-starter-kit.git my-bot
+git clone https://github.com/sungbongju/cha-bot-starterkit.git my-bot
 cd my-bot
+rm -rf .git
+git init -b main
+```
+
+### 2. (선택) 로컬에서 확인
+
+```bash
 npm install
-```
-
-### 2. Add your VRM avatar
-
-Put a `.vrm` file at `public/avatar.vrm`. Two easy ways:
-
-- **Quickest** — download a free avatar from [VRoid Hub](https://hub.vroid.com)
-  (filter by `License: Allow Redistribution`)
-- **Custom** — make your own with the free
-  [VRoid Studio](https://vroid.com/en/studio) desktop app
-  (open a Sample Character → Export → Export VRM → save as `avatar.vrm`)
-
-> Without this file, the avatar panel will show a friendly placeholder
-> telling you exactly where to drop it.
-
-### 3. Configure backend (optional)
-
-Copy the env template:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` and set `ONPREMISE_BASE_URL` + `ONPREMISE_API_KEY` to point at
-your own LLM / STT / TTS server. The starter kit's Vercel serverless
-functions (`/api/*.js`) proxy requests to this server.
-
-If you skip this step, the UI still loads but chat / voice will fail
-(no backend to talk to). The avatar still renders.
-
-### 4. Run locally
-
-```bash
 npm run dev
+# http://localhost:5173 — 아바타 화면 확인
 ```
 
-Open <http://localhost:5173>. You should see your avatar (or the
-placeholder if you didn't add one yet).
+> 채팅은 Vercel 배포 후에만 동작 (Middleton 백엔드 호출).
 
-### 5. Deploy to Vercel
+### 3. 본인 GitHub 레포에 푸시
 
 ```bash
-# Create a new repo on github.com first, then:
-git remote set-url origin https://github.com/YOUR_USERNAME/my-bot.git
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/YOUR_USERNAME/my-bot.git
 git push -u origin main
 ```
 
-Then on [vercel.com](https://vercel.com): **New Project → Import** your
-repo → add the same env vars under **Settings → Environment Variables**
-→ Deploy.
+### 4. Vercel 배포
+
+[vercel.com](https://vercel.com) → New Project → 본인 레포 Import.
+**Environment Variables** 에 다음 2개 설정:
+
+| Name | Value |
+|---|---|
+| `TEAM_ID` | 본인 팀 번호 두 자리 (예: `03`) |
+| `VITE_KAKAO_JS_KEY` | 카카오 디벨로퍼에서 발급한 JavaScript 키 |
+
+Deploy 클릭 → 2~3분 후 배포 URL 발급.
+
+### 5. 카카오 설정
+
+카카오 디벨로퍼 콘솔에서:
+- 플랫폼: Web → 사이트 도메인에 Vercel URL 추가
+- 카카오 로그인 활성화 + Redirect URI 등록
+- 동의항목: 닉네임, 이메일
+
+### 6. RAG 청크 추가 (본인 봇 페르소나 만들기)
+
+웹 페이지에서 직접 추가:
+
+```
+https://middleton.p-e.kr/finbot/team/{TEAM_ID}/rag
+```
+
+JSONL 형식으로 청크 입력 → API 키 (박교수님께 받음) → 저장.
+
+### 7. 아바타 교체
+
+[VRoid Studio](https://vroid.com/en/studio) 에서 본인 캐릭터 만들기 → VRM 익스포트
+→ `public/avatar.vrm` 으로 저장 → git push → Vercel 자동 재배포.
 
 ---
 
-## 📁 Project structure
+## 📖 자세한 자습서
+
+**[docs/tutorial.html](docs/tutorial.html)** — 11단계 자습서 (박교수님 자습서 형식 그대로)
+
+박교수님 자습서 ([bizmodel-bots-2026](https://github.com/sdkparkforbi/bizmodel-bots-2026)) 와의 차이는 Step 3, 4, 8 세 단계뿐:
+- **Step 3**: 클론 URL이 `cha-bot-starterkit` (이 레포)
+- **Step 4**: OpenAI 키 불필요 / `TEAM_ID` env 추가
+- **Step 8**: SSH + 스크립트 대신 웹 페이지로 RAG 관리
+
+---
+
+## 📁 프로젝트 구조
 
 ```
-cha-bot-starter-kit/
-├─ index.html                 entry HTML
+cha-bot-starterkit/
+├─ index.html                 entry HTML + Kakao SDK init
 ├─ vite.config.js
 ├─ vercel.json                SPA fallback
-├─ .env.example               env template (no secrets committed)
+├─ .env.example               env template
 │
 ├─ public/
-│  ├─ avatar.vrm              ⭐ ADD YOUR VRM HERE (not committed in starter)
-│  └─ og-thumbnail.png        social preview image
+│  └─ avatar.vrm              ⭐ 본인 VRM 여기 (없으면 placeholder)
 │
 ├─ src/
 │  ├─ main.jsx                React entry
-│  ├─ App.jsx                 main app — VRM + chat + STT + TTS orchestration
+│  ├─ App.jsx                 메인 — VRM + 채팅 + STT + TTS orchestration
 │  ├─ lib/
-│  │  ├─ api.js               session id + optional chat logging
-│  │  └─ stt.js               MicRecorder (getUserMedia + VAD + audio chunks)
+│  │  ├─ api.js               session + auth
+│  │  └─ stt.js               MicRecorder
 │  └─ components/
-│     ├─ VRMAvatar.jsx        ⭐ Three.js + three-vrm renderer + lip-sync
-│     ├─ AvatarPanel.jsx      avatar + camera + mode toggles + start/stop
-│     └─ ChatPanel.jsx        chat messages + input + mic
+│     ├─ VRMAvatar.jsx        Three.js + three-vrm 렌더러 + 립싱크
+│     ├─ AvatarPanel.jsx      아바타 + 카메라 + 모드 토글 + 시작/종료
+│     ├─ ChatPanel.jsx        채팅 메시지 + 입력 + 마이크
+│     └─ AuthModal.jsx        카카오/이메일 로그인 모달
 │
-└─ api/                       Vercel serverless functions (backend proxies)
-   ├─ chat-stream.js          SSE LLM stream proxy
-   ├─ chat.js                 batch LLM proxy (fallback)
-   ├─ tts.js                  text → audio proxy
-   └─ stt.js                  audio → text proxy
+├─ api/                       Vercel serverless 함수 (Middleton 프록시)
+│  ├─ chat-stream.js          SSE LLM 스트림 → /api/team/{TEAM_ID}/chat-stream
+│  ├─ chat.js                 배치 LLM (fallback)
+│  ├─ tts.js                  text → audio
+│  ├─ stt.js                  audio → text
+│  └─ school-api.js           로그인/회원/세션 (Middleton finbot)
+│
+└─ docs/
+   └─ tutorial.html           학생용 11-step 자습서
 ```
 
 ---
 
-## 🎨 Customization checklist
+## 🎨 커스터마이징 체크리스트
 
-| Want to change... | Edit... |
+| 바꾸고 싶은 것 | 수정 위치 |
 |---|---|
-| **Avatar character** | replace `public/avatar.vrm` |
-| **Avatar camera angle** | `src/components/VRMAvatar.jsx` line 226-227 |
-| **Bot greeting message** | `src/App.jsx` — `GREETING_TEXT` / `GREETING_TTS` constants |
-| **Page title / favicon** | `index.html` |
-| **Chat panel title** | pass `title="..."` prop to `<ChatPanel>` |
-| **TTS pronunciation rules** | `src/App.jsx` — `normalizeTtsText()` |
-| **Vision intent keywords** | `src/App.jsx` — `VISION_INTENT` regex |
-| **Color / theme** | `src/index.css` + `*.module.css` files |
-| **Backend endpoints** | `api/*.js` files + `.env` |
+| **아바타 캐릭터** | `public/avatar.vrm` 교체 |
+| **아바타 카메라 각도** | `src/components/VRMAvatar.jsx` (line 226-227) |
+| **봇 첫 인사 문구** | `src/App.jsx` — `GREETING_TEXT` / `GREETING_TTS` 상수 |
+| **페이지 제목 / favicon** | `index.html` |
+| **채팅 패널 타이틀** | `<ChatPanel title="..." />` prop |
+| **봇 페르소나 / 답변 스타일** | Middleton RAG 청크로 표현 (Step 6) |
+| **STT 도메인 단어 prime** | Vercel env `WHISPER_PROMPT` (쉼표 구분 단어 목록) |
 
 ---
 
-## 🧪 Testing locally without a backend
+## 🛠 백엔드 (Middleton)
 
-The frontend works standalone — VRM rendering, mode switching, theme
-toggle, and the UI all function. Only the chat/voice features need a
-backend.
+학생이 직접 운영할 필요 없음. 박교수님이 16팀 공유로 미리 세팅:
 
-For quick frontend-only testing:
-
-```bash
-npm run dev
-# → see avatar, switch modes, toggle theme.
-# Chat send button will return a 502/network error (no backend) but
-# the UI doesn't crash.
-```
+| Endpoint | 용도 |
+|---|---|
+| `/api/team/{id}/chat-stream` | SSE 스트리밍 채팅 (RAG + Gemma4) |
+| `/api/team/{id}/chat` | 배치 채팅 (fallback) |
+| `/whisper/v1/audio/transcriptions` | STT (faster-whisper-large-v3-turbo) |
+| `/api/tts` | TTS (OmniVoice) |
+| `/finbot/team/{id}/rag` | RAG 관리 웹 UI |
 
 ---
 
-## 🛠 Backend requirements
+## 📜 라이선스
 
-Your on-premise server should expose these endpoints (the Vercel
-functions in `api/` proxy to them):
+MIT.
 
-| Endpoint | Method | Body | Response |
-|---|---|---|---|
-| `/chat-stream` | POST | `{message, history, images?}` | SSE stream: `data: {"token":"..."}` |
-| `/chat` | POST | `{message, history}` | `{reply, ttsReply}` |
-| `/tts` | POST | `{text}` | audio (wav/mp3) |
-| `/stt` | POST | audio Blob | `{text}` |
-
-The included `api/*.js` files have the proxy logic — you may need to
-adjust headers / paths to match your backend's URL scheme.
-
----
-
-## 📜 License
-
-MIT — see [LICENSE](LICENSE) (if present) or use freely.
-
-Avatar files (`public/avatar.vrm` you add) follow **their own** VRM
-license metadata. Always check `allowRedistribution`, `commercialUsage`,
-and `creditNotation` fields before redistributing your bot publicly.
+아바타 VRM 파일은 본인이 추가하는 것의 **자체 라이선스** 를 따릅니다.
+공개 배포 전 `allowRedistribution`, `commercialUsage`, `creditNotation` 메타데이터 확인 필수.
 
 ---
 
 ## 🙏 Credits
 
-- **VRM rendering**: built on [@pixiv/three-vrm](https://github.com/pixiv/three-vrm)
+- **VRM 렌더링**: [@pixiv/three-vrm](https://github.com/pixiv/three-vrm)
 - **VRoid Studio**: [vroid.com/en/studio](https://vroid.com/en/studio)
-- **Original VRM migration**: [차상현 (STARG-LEE)](https://github.com/STARG-LEE/cha-interview-bot-liveavatar)
-- **Streaming + optimization layer**: sungbongju + Claude (Anthropic)
+- **Team Edition 백엔드 + 자습서**: 성봉주 + Claude (Anthropic)
+- **박교수님 원본 자습서**: [bizmodel-bots-2026](https://github.com/sdkparkforbi/bizmodel-bots-2026)
 
 ---
 
-## 🆘 Stuck?
+## 🆘 트러블슈팅
 
-Common issues:
-
-| Symptom | Likely cause |
+| 증상 | 원인 |
 |---|---|
-| Avatar slot is empty | `public/avatar.vrm` missing → add one |
-| Chat send fails with network error | Backend not configured → set env vars |
-| Mic button does nothing | Browser blocked microphone → check site permissions |
-| Camera doesn't appear in FTF mode | Browser blocked camera → check site permissions |
-| Build warning "chunks larger than 500 kB" | Normal (Three.js is large); safe to ignore |
-| TypeError: speak is not a function | VRM didn't finish loading → wait a few seconds |
+| 아바타 자리에 placeholder | `public/avatar.vrm` 없음 → 추가 |
+| 채팅 시 network error | `TEAM_ID` env 누락 또는 잘못된 팀 번호 |
+| 카카오 로그인 안 됨 | `VITE_KAKAO_JS_KEY` 누락 또는 Redirect URI 미등록 |
+| 마이크 버튼 무반응 | 브라우저 마이크 권한 차단 → 사이트 권한 확인 |
+| 빌드 경고 "chunks larger than 500 kB" | 정상 (Three.js가 크기 때문) — 무시 |
+| RAG 청크 추가 시 권한 오류 | 팀별 API 키 (박교수님께 받음) 잘못됨 |
 
-Still stuck? Open an [issue](https://github.com/sungbongju/cha-bot-starter-kit/issues).
+이슈 → [GitHub Issues](https://github.com/sungbongju/cha-bot-starterkit/issues)

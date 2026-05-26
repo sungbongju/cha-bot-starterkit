@@ -143,7 +143,7 @@ export default function AvatarPanel({
         )}
       </div>
 
-      <div className={styles.optionPanel} aria-label="상담 방식 설정">
+      <div className={styles.optionPanel} aria-label="대화 방식 설정">
         <div className={styles.optionRow}>
           <button
             type="button"
@@ -188,7 +188,7 @@ export default function AvatarPanel({
       {status === 'idle' && (
         <button className={styles.startBtn} onClick={onStart}>
           <span className={styles.startBtnIcon}>▶</span>
-          상담 시작
+          대화 시작
         </button>
       )}
       {status === 'connecting' && (
