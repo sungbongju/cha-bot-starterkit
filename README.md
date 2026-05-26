@@ -23,6 +23,17 @@
 
 ### 2️⃣ 레포 복사 + 푸시
 
+#### 2-1. GitHub에서 빈 레포 만들기 (웹 브라우저)
+
+1. https://github.com/new 접속 (본인 계정 로그인)
+2. **Repository name**: `my-bot` (원하는 이름)
+3. **Public** 선택
+4. **체크박스 모두 OFF** (README/.gitignore/license 다 끄기 — 푸시 충돌 방지)
+5. **Create repository** 클릭
+6. 생성된 페이지에서 URL 확인: `https://github.com/[본인]/my-bot.git`
+
+#### 2-2. 로컬에서 클론 + 푸시 (CMD)
+
 ```cmd
 cd C:\projects
 mkdir my-bot
@@ -34,6 +45,10 @@ git add . && git commit -m "내 봇 시작"
 git remote add origin https://github.com/[본인]/my-bot.git
 git push -u origin main
 ```
+
+> ⚠️ `git remote add` 명령의 URL은 **2-1에서 만든 본인 레포** URL입니다. `sungbongju/cha-bot-starterkit.git` 이 아님.
+
+> 💡 처음 `git push` 시 GitHub 로그인 창이 뜹니다. 브라우저에서 인증하면 자동 푸시.
 
 ### 3️⃣ Vercel 배포
 
