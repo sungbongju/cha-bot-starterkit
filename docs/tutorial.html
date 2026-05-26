@@ -659,45 +659,99 @@ git push -u origin main</code></pre>
     <section id="step-9">
       <h2><span class="step-num">9</span>VRoid 아바타 만들기</h2>
 
-      <p>봇의 3D 캐릭터를 본인 봇 페르소나에 맞게 만듭니다.</p>
+      <p>봇의 3D 캐릭터를 본인 봇 페르소나에 맞게 만듭니다. <strong>두 가지 경로</strong>:</p>
 
-      <h3>9-1. VRoid Studio 다운로드</h3>
+      <table>
+        <tr><th></th><th>🚀 빠른 경로 (10분)</th><th>🎨 정공법 (30분~1시간)</th></tr>
+        <tr><td>방법</td><td>VRoid Hub에서 무료 VRM 다운</td><td>VRoid Studio로 직접 제작</td></tr>
+        <tr><td>설치</td><td>없음 (브라우저만)</td><td>VRoid Studio 1GB 다운</td></tr>
+        <tr><td>커스터마이즈</td><td>제한적</td><td>완전 자유</td></tr>
+        <tr><td>추천 대상</td><td>시연 우선 / 빠르게 끝내고 싶음</td><td>본인 봇 페르소나 100% 반영</td></tr>
+      </table>
+
+      <h3>🚀 빠른 경로: VRoid Hub에서 다운로드</h3>
+      <ol>
+        <li><a href="https://hub.vroid.com/" target="_blank">https://hub.vroid.com/</a> 접속</li>
+        <li>우측 필터 → <strong>License</strong> → <strong>Allow Redistribution</strong> 체크 (재배포 허용된 모델만)</li>
+        <li>마음에 드는 캐릭터 클릭 → <strong>Download</strong> → <code>.vrm</code> 파일 받기</li>
+        <li>다운로드된 파일을 본인 프로젝트로 옮기는 건 <strong>9-5</strong> 진행</li>
+      </ol>
+
+      <div class="tip">
+        <strong>💡 라이선스 주의</strong>
+        "Allow Redistribution" 표시 없는 모델은 공개 봇에 쓰면 안 됩니다 (저작권 위반).
+        필터 적용 후 받은 모델은 안전.
+      </div>
+
+      <hr style="margin:32px 0;border:none;border-top:1px solid var(--border)" />
+
+      <h3>🎨 정공법 9-1. VRoid Studio 다운로드 + 설치</h3>
       <ol>
         <li><a href="https://vroid.com/en/studio" target="_blank">https://vroid.com/en/studio</a> 접속</li>
-        <li>Windows / Mac 버전 다운로드 (무료)</li>
-        <li>설치 후 실행</li>
+        <li>Windows / Mac 버전 다운로드 (무료, 약 1GB)</li>
+        <li>설치 후 실행 — 처음 켜면 튜토리얼 영상 자동 재생 (스킵 가능)</li>
       </ol>
 
-      <h3>9-2. 캐릭터 만들기</h3>
+      <h3>🎨 정공법 9-2. 첫 화면 + 기본 캐릭터 선택</h3>
       <ol>
-        <li><code>New</code> → 기본 캐릭터 선택 (Female/Male Sample)</li>
-        <li>좌측 메뉴에서 외형 커스터마이즈 (Face / Hair / Body / Outfit / Accessories)</li>
-        <li>본인 봇 페르소나에 맞게 디자인
+        <li>왼쪽 위 <code>+ New</code> 버튼 클릭</li>
+        <li>샘플 캐릭터 중 하나 선택:
           <ul>
-            <li>분개해 → 학생 같은 단정한 캐릭터</li>
-            <li>상도 → 한복 + 정장 (시대 혼합)</li>
-            <li>토닥이 → 보들보들 핑크 캐릭터</li>
+            <li><strong>AvatarSample_A</strong> (여성, 단정한 학생) → 분개해/지키미/토닥이 같은 봇에 추천</li>
+            <li><strong>AvatarSample_B</strong> (남성, 활동적) → 나달/장보고 같은 봇에 추천</li>
+            <li><strong>AvatarSample_F</strong> (귀여운 캐릭터) → 식구/숨돌이/하루 같은 봇에 추천</li>
           </ul>
         </li>
+        <li>편집 화면 진입 — 좌측에 메뉴 카테고리들 표시됨</li>
       </ol>
 
-      <h3>9-3. VRM으로 Export</h3>
+      <h3>🎨 정공법 9-3. 캐릭터 커스터마이즈</h3>
+      <p>좌측 메뉴 카테고리별로 수정:</p>
+      <table>
+        <tr><th>메뉴</th><th>설명</th><th>학생 팁</th></tr>
+        <tr><td><strong>Face (얼굴)</strong></td><td>눈, 코, 입, 윤곽</td><td>처음이면 기본값 사용 권장</td></tr>
+        <tr><td><strong>Hair (헤어)</strong></td><td>스타일, 색상, 길이</td><td>색상만 바꿔도 개성 확 살아남</td></tr>
+        <tr><td><strong>Body (몸)</strong></td><td>키, 체형</td><td>기본값 OK. 너무 만지면 비례 깨짐</td></tr>
+        <tr><td><strong>Outfit (의상)</strong></td><td>옷, 신발</td><td>봇 컨셉 반영하기 좋은 곳 — 한복/정장/캐주얼</td></tr>
+        <tr><td><strong>Accessories (액세서리)</strong></td><td>안경, 모자</td><td>안경 하나 추가만으로 분위기 변화</td></tr>
+      </table>
+
+      <div class="tip">
+        <strong>💡 봇 컨셉별 디자인 가이드</strong>
+        <ul style="margin:6px 0">
+          <li><strong>분개해</strong> (회계 학습): 단정한 학생 룩, 안경 + 단발머리</li>
+          <li><strong>상도</strong> (전통 상인): 한복 + 정장 혼합</li>
+          <li><strong>토닥이</strong> (정서 케어): 따뜻한 색 (핑크/파스텔), 부드러운 헤어</li>
+          <li><strong>장보고</strong> (해상 무역): 활동적 의상, 짧은 머리</li>
+          <li><strong>식구</strong> (한식): 한복 또는 셰프 복장, 친근한 표정</li>
+        </ul>
+      </div>
+
+      <h3>🎨 정공법 9-4. VRM으로 Export</h3>
       <ol>
-        <li>좌측 상단 <code>☰</code> → <code>Export</code> → <code>Export as VRM</code></li>
-        <li>VRM 1.0 선택</li>
-        <li>라이선스 화면에서:
+        <li>좌측 상단 <code>☰</code> (햄버거 메뉴) 클릭 → <code>Export</code> → <code>Export as VRM</code></li>
+        <li><strong>VRM 1.0</strong> 선택 (VRM 0.x 는 일부 기능 호환 안 됨)</li>
+        <li><strong>라이선스 화면</strong>에서 다음 4가지 반드시 설정:
           <ul>
-            <li><strong>Avatar Permission</strong>: Everyone</li>
-            <li><strong>Commercial Usage</strong>: Allow</li>
-            <li><strong>Modification</strong>: Allow</li>
-            <li><strong>Redistribution</strong>: Allow</li>
+            <li><strong>Avatar Permission</strong>: <code>Everyone</code> (모두 사용 가능)</li>
+            <li><strong>Commercial Usage</strong>: <code>Allow</code> (시연/배포 위해 필수)</li>
+            <li><strong>Modification</strong>: <code>Allow</code></li>
+            <li><strong>Redistribution</strong>: <code>Allow</code></li>
           </ul>
         </li>
-        <li>파일명: 일단 본인이 원하는 이름 OK (예: <code>분개해.vrm</code>)</li>
-        <li>저장 위치 기억해두기 (보통 <code>Desktop</code> 또는 <code>Documents\VRoid\avatars</code>)</li>
+        <li><strong>파일명</strong>: 본인이 원하는 이름 OK (예: <code>분개해.vrm</code>) — 다음 단계에서 어차피 <code>avatar.vrm</code> 으로 바꿉니다</li>
+        <li><strong>저장 위치 기억!</strong> 보통 <code>Desktop</code> 또는 <code>Documents\VRoid\avatars</code></li>
       </ol>
 
-      <h3>9-4. 프로젝트에 적용 ⚠️ 파일명 정확히 <code>avatar.vrm</code></h3>
+      <div class="warn">
+        <strong>⚠️ 라이선스 모두 "Allow" 안 하면 시연/공유 불가</strong>
+        4가지 중 하나라도 "Deny" 면 봇 공개 못 함 (저작권 위반).
+        본인이 만든 캐릭터니까 다 Allow 해주세요.
+      </div>
+
+      <hr style="margin:32px 0;border:none;border-top:1px solid var(--border)" />
+
+      <h3>9-5. 프로젝트에 적용 (두 경로 공통) ⚠️ 파일명 정확히 <code>avatar.vrm</code></h3>
 
       <div class="danger">
         <strong>🚨 파일명 규칙 (어기면 봇이 못 찾음)</strong>
@@ -725,7 +779,7 @@ git push</code></pre>
 
       <div class="info">
         <strong>✅ <code>git status</code> 에서 <code>new file: public/avatar.vrm</code> 표시되어야 정상</strong>
-        안 보이면 파일이 잘못된 폴더에 있거나 이름이 다른 경우. 9-4 박스 다시 확인.
+        안 보이면 파일이 잘못된 폴더에 있거나 이름이 다른 경우. 9-5 박스 다시 확인.
       </div>
 
       <p>1~3분 후 Vercel 자동 재배포 → 새 아바타 등장.</p>
