@@ -48,6 +48,14 @@ export default async function handler(req, res) {
       if (v) fwdHeaders[name] = String(v)
     }
 
+    // 팀 격리: Vercel env TEAM_ID → X-Team-Id 헤더로 학교 서버 PHP에 전달.
+    // PHP가 users/chat_logs_la/survey_responses_la에 team_id 칼럼 저장.
+    // 미설정 시 NULL → 레거시 (면담봇) 데이터로 간주.
+    const TEAM_ID = process.env.TEAM_ID
+    if (TEAM_ID) {
+      fwdHeaders['X-Team-Id'] = String(TEAM_ID).padStart(2, '0')
+    }
+
     const upstream = await fetch(`${SCHOOL_API_BASE}?action=${encodeURIComponent(action)}`, {
       method: 'POST',
       headers: fwdHeaders,
