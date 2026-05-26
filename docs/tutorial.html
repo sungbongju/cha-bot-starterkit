@@ -583,80 +583,76 @@ git push -u origin main</code></pre>
 
       <div class="info">
         <strong>⭐ 박교수님 자습서와 가장 큰 차이</strong>
-        SSH/Node 스크립트 <strong>전혀 사용 안 함</strong>. 웹 페이지에서 청크 붙여넣고 버튼 클릭만.
+        SSH/Node 스크립트 <strong>전혀 사용 안 함</strong>. 텍스트만 붙여넣으면 AI가 자동으로 RAG 청크 생성 → 저장 1초.
       </div>
 
       <h3>8-1. 본인 팀 RAG 관리 페이지 접속</h3>
-      <p>브라우저에서 (팀 번호 03이면):</p>
+      <p>박교수님이 16팀 URL 카톡으로 전달. 예시 (분개해 = team_03):</p>
       <pre><code>https://middleton.p-e.kr/finbot/team/03/rag</code></pre>
-      <p>본인 팀 번호로 바꿔서 접속하세요.</p>
+      <p>본인 팀 번호 두 자리로 바꿔서 접속하세요 (예: <code>team/01/rag</code>, <code>team/16/rag</code>).</p>
 
-      <h3>8-2. 청크 형식 이해</h3>
-      <p>JSONL 형식 (한 줄당 하나의 JSON). 예시 (분개해 봇):</p>
-      <pre><code>{"id":"acc-001","question":"분개가 뭐예요?","answer":"거래를 차변과 대변으로 나누어 기록하는 회계 절차입니다."}
-{"id":"acc-002","question":"차변과 대변의 차이?","answer":"차변(왼쪽)은 자산 증가/부채 감소, 대변(오른쪽)은 자산 감소/부채 증가를 기록합니다."}</code></pre>
-
-      <h3>8-3. 본인 봇용 청크 만들기</h3>
+      <h3>8-2. 🆕 텍스트로 자동 만들기 (권장) ⭐</h3>
+      <p>학생 입장에서 가장 쉬운 방법. JSONL 형식 몰라도 됨.</p>
       <ol>
-        <li>본인 봇 주제 청크 50~100개 작성 (메모장 또는 VS Code)</li>
-        <li>JSONL 형식: 한 줄에 하나의 JSON</li>
-        <li>각 필드:
+        <li>본인 봇 주제 텍스트 준비 (뉴스 기사, 강의 노트, 위키 등)</li>
+        <li>웹 페이지의 <strong>🆕 텍스트로 자동 만들기</strong> 박스 (초록색)에서:
           <ul>
-            <li><strong>id</strong>: 고유 식별자 (예: "acc-001")</li>
-            <li><strong>question</strong>: 사용자가 물어볼 만한 자연어 질문</li>
-            <li><strong>answer</strong>: 짧고 구체적 (2~5줄)</li>
-            <li><strong>section</strong> (선택): 카테고리</li>
+            <li>방법 A: <code>📄 텍스트 파일 업로드</code> → <code>.txt</code> 또는 <code>.md</code> 선택</li>
+            <li>방법 B: textarea에 텍스트 직접 붙여넣기</li>
           </ul>
         </li>
+        <li><strong>🤖 AI로 청크 만들기</strong> 버튼 클릭</li>
+        <li>30초~1분 대기 (Gemma4가 분석)</li>
+        <li>✨ 생성된 청크 5~25개 미리보기 표시</li>
+        <li><strong>이대로 저장</strong> 클릭 → 봇에 즉시 반영. 마음에 안 들면 <strong>다시 만들기</strong>.</li>
       </ol>
 
       <div class="tip">
-        <strong>💡 AI로 청크 만들기</strong>
-        ChatGPT/Claude에 다음 프롬프트:<br>
-        <em>"분개해 봇 (회계 학습 친구) 에 쓸 RAG 청크 50개를 JSONL 형식으로 만들어줘. 형식: <code>{"id":"...","question":"...","answer":"..."}</code>"</em>
-      </div>
-
-      <h3>8-4. 청크 추가 — 파일 업로드 방식 (권장)</h3>
-      <ol>
-        <li>본인 청크들을 <code>chunks.jsonl</code> 파일로 저장 (메모장에서 "다른 이름으로 저장" → 확장자 <code>.jsonl</code>, 인코딩 <strong>UTF-8</strong>)</li>
-        <li>웹 페이지 (위 URL) 열기 → 본인 봇 정보 확인</li>
-        <li><strong>📎 JSONL 파일 업로드</strong> 박스에서 <code>파일 선택</code> 클릭 → <code>chunks.jsonl</code> 선택</li>
-        <li>자동 검증 메시지 확인:
-          <ul>
-            <li>✅ "N개 청크 모두 유효" → 다음 단계로</li>
-            <li>⚠️ "줄 X: ..." → 해당 줄 수정 후 다시 업로드</li>
-          </ul>
-        </li>
-        <li><strong>팀 키</strong> 입력 (박교수님께 별도 받음, 예: <code>team-03-9478c414d6f8eab9</code>)</li>
-        <li><code>청크 추가</code> 버튼 클릭</li>
-        <li>임베딩 자동 생성 (청크 수 × 0.5초)</li>
-        <li>"N개 추가됨. 총 N개." 메시지 → 성공!</li>
-      </ol>
-
-      <div class="tip">
-        <strong>💡 직접 입력도 가능</strong>
-        파일이 없으면 "미리보기 / 직접 입력" textarea 에 JSONL 을 직접 붙여넣고 추가도 가능합니다.
-      </div>
-
-      <h3>8-5. 봇에서 확인</h3>
-      <p>본인 봇 사이트 (<code>https://my-team-03-bot.vercel.app</code>) 새로고침 → 청크의 question 과 비슷한 질문 입력 → RAG 활용 답변 확인.</p>
-
-      <div class="warn">
-        <strong>⚠️ JSON 형식 오류 주의</strong>
-        한 줄에 하나의 JSON, 큰따옴표 (작은따옴표 X), 마지막 쉼표 없음.
-        오류 있으면 웹 페이지가 정확한 줄 번호 + 에러 메시지를 보여줍니다.
-      </div>
-
-      <div class="warn">
-        <strong>⚠️ 한글 깨짐 주의 — 파일 인코딩은 반드시 UTF-8</strong>
-        메모장 기본 저장 (ANSI) 으로 하면 한글이 깨져서 올라갑니다. VS Code 권장 (자동 UTF-8). 메모장이라면 "다른 이름으로 저장" 시 하단 인코딩 드롭다운 → <strong>UTF-8</strong> 선택.
+        <strong>💡 텍스트 분량 가이드</strong>
+        한 번에 <strong>500~5,000자</strong> 권장 (청크 5~15개 생성). 너무 길면 (>10,000자) 나눠서 업로드.
+        최대 30,000자.
       </div>
 
       <div class="info">
         <strong>📌 다른 팀에 영향 없음</strong>
-        본인 팀 키로만 본인 팀 파일에 추가됩니다.
+        본인 팀 URL로 들어가면 본인 팀 파일에만 저장됩니다.
         16팀 데이터는 서로 완전히 분리되어 있습니다.
       </div>
+
+      <h3>8-3. 청크 직접 추가 — JSONL 방식 (개발자용, 선택)</h3>
+      <p>JSONL 형식 알고 있는 사람용. 정확한 형식으로 청크를 컨트롤하고 싶을 때.</p>
+
+      <p>JSONL 예시 (분개해 봇):</p>
+      <pre><code>{"id":"acc-001","question":"분개가 뭐예요?","answer":"거래를 차변과 대변으로 나누어 기록하는 회계 절차입니다."}
+{"id":"acc-002","question":"차변과 대변의 차이?","answer":"차변(왼쪽)은 자산 증가, 대변(오른쪽)은 부채 증가를 기록합니다."}</code></pre>
+
+      <ol>
+        <li>본인 청크들을 <code>chunks.jsonl</code> 파일로 저장 (VS Code 권장 — 자동 UTF-8)</li>
+        <li>웹 페이지 <strong>📝 청크 직접 추가</strong> 섹션 → <code>📎 JSONL 파일 업로드</code> → 파일 선택</li>
+        <li>자동 검증 메시지 확인:
+          <ul>
+            <li>✅ "N개 청크 모두 유효" → 다음 단계</li>
+            <li>⚠️ "줄 X: ..." → 해당 줄 수정 후 다시 업로드</li>
+          </ul>
+        </li>
+        <li><code>청크 추가</code> 버튼 클릭 → "N개 추가됨" 성공 메시지</li>
+      </ol>
+
+      <div class="warn">
+        <strong>⚠️ 한글 깨짐 주의 — 파일 인코딩은 반드시 UTF-8</strong>
+        Windows 메모장 기본 저장 (ANSI) 으로 하면 한글 깨짐. VS Code 권장 (자동 UTF-8).
+        메모장이라면 "다른 이름으로 저장" 시 하단 인코딩 드롭다운 → <strong>UTF-8</strong>.
+      </div>
+
+      <h3>8-4. 봇에서 확인</h3>
+      <p>본인 봇 사이트 (<code>https://[본인-vercel-url].vercel.app</code>) 새로고침 → 청크에 들어간 내용 관련 질문 입력 → RAG 활용 답변 확인.</p>
+
+      <p>예시 (분개해 봇):</p>
+      <ul>
+        <li>"비품을 30만원에 외상으로 샀어. 분개해줘"</li>
+        <li>"직원 월급 250만원 줬어"</li>
+        <li>"은행에서 1000만원 빌렸어"</li>
+      </ul>
     </section>
 
     <!-- STEP 9 -->
@@ -832,11 +828,11 @@ git push</code></pre>
         <li>브라우저 콘솔(F12) 에서 빨간 메시지 확인</li>
       </ul>
 
-      <h3>Q2: RAG 청크 추가 페이지에서 "403 팀 키가 일치하지 않습니다"</h3>
+      <h3>Q2: 다른 팀 URL로 들어가도 청크 추가가 되네요?</h3>
       <ul>
-        <li>박교수님께 받은 본인 팀 키 정확히 입력했는지 확인</li>
-        <li>키 형식: <code>team-XX-xxxxxxxxx</code> (XX는 팀 번호)</li>
-        <li>공백/줄바꿈 없이 복사</li>
+        <li>맞습니다 — 교내 교육용이라 인증 없음 (박교수님 정책: 보안 강조 X)</li>
+        <li>본인 팀 URL만 사용하세요 (사고 시 자동 백업으로 즉시 복구 가능)</li>
+        <li>한 번에 최대 200개 청크 제한 (스팸 방지)</li>
       </ul>
 
       <h3>Q3: 봇이 RAG 청크를 무시하고 일반 답변만 합니다</h3>
