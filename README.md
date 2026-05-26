@@ -1,6 +1,6 @@
 # 🤖 cha-bot-starterkit
 
-> 박교수님 **2026 비즈모델 경진대회 16팀**용 봇 스타터킷.
+> **2026 비즈모델 경진대회 16팀**용 봇 스타터킷.
 > **코드 한 줄도 안 건드리고** 본인 봇 만들기.
 
 | | |
@@ -19,7 +19,7 @@
 
 - [Node.js](https://nodejs.org/) + [Git](https://git-scm.com/downloads) 설치
 - GitHub / Vercel / 카카오디벨로퍼 계정 가입
-- **본인 팀 번호** (01~16) — 박교수님께 받음
+- **본인 팀 번호** (01~16) — 운영자에게 받음
 
 ### 2️⃣ 레포 복사 + 푸시
 
@@ -120,6 +120,5 @@ https://middleton.p-e.kr/finbot/team/[본인팀번호]/rag
 
 - **백엔드 + 스타터킷**: 성봉주 + Claude (Anthropic)
 - **VRM 렌더링**: [@pixiv/three-vrm](https://github.com/pixiv/three-vrm)
-- **박교수님 자습서 원본**: [bizmodel-bots-2026](https://github.com/sdkparkforbi/bizmodel-bots-2026)
 
 MIT License.

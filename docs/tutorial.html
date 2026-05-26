@@ -194,8 +194,7 @@
   <p><strong>cha-bot-starterkit</strong> (Team Edition) — 16팀 비즈모델 경진대회용</p>
   <p class="badge">Gemma4 + 서버 사이드 RAG (학생 비용 0원)</p>
   <p style="margin-top:10px; font-size:0.9rem;">
-    <a href="https://github.com/sungbongju/cha-bot-starterkit">GitHub 레포</a> ·
-    <a href="https://github.com/sdkparkforbi/bizmodel-bots-2026">박교수님 메인</a>
+    <a href="https://github.com/sungbongju/cha-bot-starterkit">GitHub 레포</a>
   </p>
 </div>
 
@@ -221,20 +220,20 @@
   <main class="content">
 
     <section>
-      <h2>📖 이 자습서가 박교수님 자습서와 다른 점</h2>
+      <h2>📖 이 자습서가 제공하는 것</h2>
       <p>
-        박교수님 메인 자습서 (<a href="https://sdkparkforbi.github.io/bizmodel-bots-2026/tutorial.html">bizmodel-bots-2026/tutorial.html</a>)와 거의 동일하지만 두 가지 핵심 차이가 있습니다:
+        16팀 비즈모델 경진대회용 봇을 학생이 <strong>코드 수정 없이</strong> 만들 수 있도록 안내합니다.
       </p>
       <table>
-        <tr><th>항목</th><th>박교수님 자습서</th><th>이 자습서 (Team Edition)</th></tr>
-        <tr><td>LLM</td><td>OpenAI API (학생 본인 키 발급, 유료)</td><td><strong>Gemma4</strong> (미들턴 공유, 무료)</td></tr>
-        <tr><td>RAG 수정</td><td>SSH + <code>node add_to_rag.js</code></td><td><strong>웹 페이지</strong> (브라우저만)</td></tr>
-        <tr><td>학생 부담</td><td>OpenAI 토큰 비용 (월 5~10만원)</td><td><strong>0원</strong></td></tr>
-        <tr><td>16팀 격리</td><td>공유 파일 (충돌 위험)</td><td><strong>팀별 분리 파일</strong></td></tr>
+        <tr><th>항목</th><th>이 자습서 제공</th></tr>
+        <tr><td>LLM</td><td><strong>Gemma4</strong> (미들턴 공유, 학생 비용 0원)</td></tr>
+        <tr><td>RAG 수정</td><td><strong>웹 페이지</strong>에서 텍스트 붙여넣기 → AI 자동 청크화</td></tr>
+        <tr><td>16팀 격리</td><td><strong>팀별 분리 파일</strong> (다른 팀 영향 없음)</td></tr>
+        <tr><td>학생 작업</td><td>Vercel 환경변수 2개 설정 + RAG 페이지에서 텍스트 추가만</td></tr>
       </table>
       <div class="info">
-        <strong>💡 Step 1, 2, 5, 6, 7, 9, 10, 11 은 박교수님 자습서와 동일합니다.</strong>
-        Step 3, 4, 8 만 다릅니다 (클론 URL · 환경변수 · RAG 수정 방법).
+        <strong>💡 5단계 핵심 흐름</strong>
+        Step 2 GitHub 푸시 → Step 6 Vercel 배포 (TEAM_ID + 카카오 키) → Step 7 카카오 SDK → Step 8 RAG 청크 → Step 9 VRoid 아바타
       </div>
     </section>
 
@@ -294,7 +293,7 @@ git config --global user.email "본인_이메일@example.com"</code></pre>
       <h2><span class="step-num">3</span>템플릿 클론 + 로컬 실행</h2>
 
       <div class="info">
-        <strong>⭐ 박교수님 자습서와 다름</strong>
+        <strong>⭐ 이 단계 핵심</strong>
         <code>cha-bot-starterkit</code> 을 클론합니다 (Team Edition: 서버 사이드 RAG + Gemma4 무료 백엔드).
       </div>
 
@@ -347,7 +346,7 @@ npm run dev</code></pre>
       <h2><span class="step-num">4</span>환경 변수 설정 (.env)</h2>
 
       <div class="info">
-        <strong>⭐ 박교수님 자습서와 다름</strong>
+        <strong>⭐ 이 단계 핵심</strong>
         OpenAI API 키 <strong>불필요</strong>. 대신 <code>TEAM_ID</code>(본인 팀 번호)와 <code>VITE_KAKAO_JS_KEY</code> 만 필요.
       </div>
 
@@ -358,14 +357,14 @@ npm run dev</code></pre>
 
       <h3>4-1. (선택) .env 파일 생성</h3>
       <p>VS Code에서 프로젝트 폴더 열기 → 새 파일 <code>.env</code> 생성 → 다음 입력:</p>
-      <pre><code># 본인 팀 번호 (01 ~ 16, 박교수님께 받음)
+      <pre><code># 본인 팀 번호 (01 ~ 16, 운영자에게 받음)
 TEAM_ID=03
 
 # 카카오 JavaScript SDK 키 (Step 7에서 설정)
 VITE_KAKAO_JS_KEY=your_kakao_js_key_here</code></pre>
 
       <h3>4-2. 본인 팀 번호 확인</h3>
-      <p>박교수님이 16팀 매핑을 공유했습니다. 본인 팀 찾기:</p>
+      <p>16팀 매핑 — 본인 팀 찾기:</p>
       <table>
         <tr><th>팀 번호</th><th>봇 이름</th><th>학생</th></tr>
         <tr><td>01</td><td>🍚 식구</td><td>김수연</td></tr>
@@ -457,7 +456,7 @@ git push -u origin main</code></pre>
       <h2><span class="step-num">6</span>Vercel 배포</h2>
 
       <div class="info">
-        <strong>⭐ 박교수님 자습서와 다름</strong>
+        <strong>⭐ 이 단계 핵심</strong>
         OpenAI 키 대신 <code>TEAM_ID</code> 환경변수 설정. (Gemma4는 미들턴 공유 = 키 불필요)
       </div>
 
@@ -582,12 +581,12 @@ git push -u origin main</code></pre>
       <h2><span class="step-num">8</span>RAG 데이터 수정 — 나만의 지식 넣기 ⭐</h2>
 
       <div class="info">
-        <strong>⭐ 박교수님 자습서와 가장 큰 차이</strong>
+        <strong>⭐ 이 자습서의 핵심 기능</strong>
         SSH/Node 스크립트 <strong>전혀 사용 안 함</strong>. 텍스트만 붙여넣으면 AI가 자동으로 RAG 청크 생성 → 저장 1초.
       </div>
 
       <h3>8-1. 본인 팀 RAG 관리 페이지 접속</h3>
-      <p>박교수님이 16팀 URL 카톡으로 전달. 예시 (분개해 = team_03):</p>
+      <p>운영자가 16팀 URL 전달. 예시 (분개해 = team_03):</p>
       <pre><code>https://middleton.p-e.kr/finbot/team/03/rag</code></pre>
       <p>본인 팀 번호 두 자리로 바꿔서 접속하세요 (예: <code>team/01/rag</code>, <code>team/16/rag</code>).</p>
 
@@ -805,7 +804,7 @@ git push</code></pre>
       <p>Team Edition 에서는 페르소나(시스템 프롬프트)가 두 곳에 있을 수 있습니다:</p>
       <ul>
         <li><strong>RAG 청크 자체</strong>: 봇 인사말/소개를 첫 청크로 등록 (가장 쉬움)</li>
-        <li><strong>미들턴 백엔드</strong>: 박교수님과 협의해서 팀별 시스템 프롬프트 커스터마이즈 가능</li>
+        <li><strong>미들턴 백엔드</strong>: 운영자와 협의해서 팀별 시스템 프롬프트 커스터마이즈 가능</li>
       </ul>
 
       <h3>10-2. 청크로 페르소나 정의 (추천)</h3>
@@ -863,9 +862,7 @@ git push</code></pre>
     <section>
       <h2>📚 추가 자료</h2>
       <ul>
-        <li><a href="https://github.com/sungbongju/cha-bot-starterkit">cha-bot-starterkit (이 자습서의 베이스)</a></li>
-        <li><a href="https://github.com/sdkparkforbi/bizmodel-bots-2026">박교수님 16팀 자습서</a></li>
-        <li><a href="https://github.com/sdkparkforbi/cha-interview-bot-liveavatar-my">박교수님 자습서 원본 템플릿</a></li>
+        <li><a href="https://github.com/sungbongju/cha-bot-starterkit">cha-bot-starterkit GitHub 레포</a></li>
         <li><a href="https://react.dev/learn" target="_blank">React 공식 문서</a></li>
         <li><a href="https://vroid.com/en/studio" target="_blank">VRoid Studio</a></li>
         <li><a href="https://vercel.com/docs" target="_blank">Vercel 문서</a></li>
@@ -884,7 +881,7 @@ git push</code></pre>
 
       <h3>Q2: 다른 팀 URL로 들어가도 청크 추가가 되네요?</h3>
       <ul>
-        <li>맞습니다 — 교내 교육용이라 인증 없음 (박교수님 정책: 보안 강조 X)</li>
+        <li>맞습니다 — 교내 교육용이라 인증 없음 (운영 정책: 보안 강조 X)</li>
         <li>본인 팀 URL만 사용하세요 (사고 시 자동 백업으로 즉시 복구 가능)</li>
         <li>한 번에 최대 200개 청크 제한 (스팸 방지)</li>
       </ul>
@@ -914,7 +911,7 @@ git push</code></pre>
 
 <footer>
   <p>cha-bot-starterkit (Team Edition) · 2026 BizModel Bots</p>
-  <p><a href="https://github.com/sungbongju/cha-bot-starterkit">GitHub</a> · 박교수님 메인 자습서: <a href="https://sdkparkforbi.github.io/bizmodel-bots-2026/tutorial.html">tutorial.html</a></p>
+  <p><a href="https://github.com/sungbongju/cha-bot-starterkit">GitHub</a></p>
 </footer>
 
 </body>
