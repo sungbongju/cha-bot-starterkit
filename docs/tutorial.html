@@ -508,10 +508,25 @@ git config --global user.email "본인_이메일@example.com"</code></pre>
       </div>
 
       <h3>3-1. 작업 폴더로 이동</h3>
-      <pre><code>cd C:\projects
+
+      <div class="os-tabs">
+        <div class="tab-nav">
+          <button class="tab-btn" data-os="win">🪟 Windows</button>
+          <button class="tab-btn" data-os="mac">🍎 Mac</button>
+        </div>
+        <div class="tab-panel" data-os="win">
+          <pre><code>cd C:\projects
 mkdir my-bot
 cd my-bot</code></pre>
-      <p><code>C:\projects</code> 폴더가 없으면 먼저 만들기: <code>mkdir C:\projects</code></p>
+          <p style="font-size:13px;color:#6b7280;margin-top:8px"><code>C:\projects</code> 폴더가 없으면 먼저 만들기: <code>mkdir C:\projects</code></p>
+        </div>
+        <div class="tab-panel" data-os="mac">
+          <pre><code>cd ~/projects
+mkdir my-bot
+cd my-bot</code></pre>
+          <p style="font-size:13px;color:#6b7280;margin-top:8px"><code>~/projects</code> 폴더가 없으면 먼저 만들기: <code>mkdir ~/projects</code></p>
+        </div>
+      </div>
 
       <h3>3-2. 템플릿 클론</h3>
       <pre><code>git clone https://github.com/sungbongju/cha-bot-starterkit.git .</code></pre>
@@ -522,17 +537,31 @@ cd my-bot</code></pre>
       </div>
 
       <h3>3-3. 기존 .git 폴더 삭제 (내 레포로 새로 시작)</h3>
-      <pre><code>rmdir /s /q .git
+
+      <div class="os-tabs">
+        <div class="tab-nav">
+          <button class="tab-btn" data-os="win">🪟 Windows</button>
+          <button class="tab-btn" data-os="mac">🍎 Mac</button>
+        </div>
+        <div class="tab-panel" data-os="win">
+          <pre><code>rmdir /s /q .git
 git init -b main</code></pre>
+        </div>
+        <div class="tab-panel" data-os="mac">
+          <pre><code>rm -rf .git
+git init -b main</code></pre>
+        </div>
+      </div>
+
       <p>원본 템플릿의 git 히스토리를 끊고, 본인 레포로 다시 시작합니다.</p>
 
       <div class="info">
         <strong>📂 지금 폴더 구조</strong>
-<pre style="margin:8px 0 0">C:\projects\my-bot\          ← 본인 작업 폴더 (계속 여기서 작업)
-  ├─ public\
-  │   └─ avatar.vrm          ← Step 8에서 본인 VRM 여기에 넣음
-  ├─ src\                    ← 코드 (수정 안 해도 됨!)
-  ├─ api\                    ← Vercel 서버리스 함수
+<pre style="margin:8px 0 0">my-bot/                       ← 본인 작업 폴더 (계속 여기서 작업)
+  ├─ public/
+  │   └─ avatar.vrm           ← Step 8에서 본인 VRM 여기에 넣음
+  ├─ src/                     ← 코드 (수정 안 해도 됨!)
+  ├─ api/                     ← Vercel 서버리스 함수
   ├─ index.html
   └─ package.json</pre>
       </div>
@@ -602,7 +631,20 @@ VITE_KAKAO_JS_KEY=your_kakao_js_key_here</code></pre>
       </div>
 
       <h3>4-3. .gitignore 확인</h3>
-      <pre><code>type .gitignore | findstr ".env"</code></pre>
+
+      <div class="os-tabs">
+        <div class="tab-nav">
+          <button class="tab-btn" data-os="win">🪟 Windows</button>
+          <button class="tab-btn" data-os="mac">🍎 Mac</button>
+        </div>
+        <div class="tab-panel" data-os="win">
+          <pre><code>findstr ".env" .gitignore</code></pre>
+        </div>
+        <div class="tab-panel" data-os="mac">
+          <pre><code>grep ".env" .gitignore</code></pre>
+        </div>
+      </div>
+
       <p><code>.env</code> 또는 <code>.env*</code>가 출력되면 OK.</p>
 
       <div class="tip">
