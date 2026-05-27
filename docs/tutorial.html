@@ -660,11 +660,11 @@ VITE_KAKAO_JS_KEY=your_kakao_js_key_here</code></pre>
       <h3>5-1. GitHub 에서 빈 레포 만들기 (브라우저)</h3>
       <ol>
         <li><a href="https://github.com/new" target="_blank">https://github.com/new</a> 접속</li>
-        <li><strong>Repository name</strong>: 본인 봇 이름 (예: <code>my-team-03-bot</code>)</li>
+        <li><strong>Repository name</strong>: 본인 봇 이름 (예: <code>my-bot</code>)</li>
         <li><strong>Public</strong> 선택</li>
         <li><strong>체크박스 모두 OFF</strong> — README, .gitignore, license 다 끄기 (켜면 push 시 충돌)</li>
         <li><code>Create repository</code> 클릭</li>
-        <li>생성된 페이지 URL 복사: <code>https://github.com/본인_사용자명/my-team-03-bot.git</code></li>
+        <li>생성된 페이지 URL 복사: <code>https://github.com/본인_사용자명/my-bot.git</code></li>
       </ol>
 
       <h3>5-2. (선택) README 수정</h3>
@@ -675,7 +675,7 @@ VITE_KAKAO_JS_KEY=your_kakao_js_key_here</code></pre>
 git commit -m "Initial commit: 내 봇 시작"</code></pre>
 
       <h3>5-4. 본인 GitHub 레포와 연결 + 푸시</h3>
-      <pre><code>git remote add origin https://github.com/본인_사용자명/my-team-03-bot.git
+      <pre><code>git remote add origin https://github.com/본인_사용자명/my-bot.git
 git push -u origin main</code></pre>
 
       <p>처음 푸시할 때 GitHub 로그인 창이 뜹니다. 브라우저에서 본인 계정으로 인증하면 자동 푸시됩니다.</p>
@@ -696,7 +696,7 @@ git push</code></pre>
       <div class="warn">
         <strong>⚠️ remote URL 정확히 확인</strong>
         <code>git remote add origin ...</code> 명령에서 URL의 <strong>본인_사용자명</strong> 부분을 정확히 박으세요.
-        예) GitHub 사용자명이 <code>kim-soyeon</code> 이면 <code>https://github.com/kim-soyeon/my-team-03-bot.git</code>.
+        예) GitHub 사용자명이 <code>kim-soyeon</code> 이면 <code>https://github.com/kim-soyeon/my-bot.git</code>.
         잘못 박으면 권한 없는 다른 레포로 push 시도해서 막힙니다.
       </div>
     </section>
@@ -733,12 +733,12 @@ git push</code></pre>
         <li>본인 GitHub 레포 안 보이면 → <code>Adjust GitHub App Permissions</code> 클릭:
           <ul>
             <li>"Install Vercel" GitHub 앱 권한 설정 화면 열림</li>
-            <li><strong>Only select repositories</strong> 선택 → 본인 레포 (예: <code>my-team-03-bot</code>) 체크</li>
+            <li><strong>Only select repositories</strong> 선택 → 본인 레포 (예: <code>my-bot</code>) 체크</li>
             <li>또는 <strong>All repositories</strong> 선택 (간단, 모든 본인 레포 접근 허용)</li>
             <li><code>Install</code> 또는 <code>Save</code> 클릭 → 자동으로 Vercel Import 화면 복귀</li>
           </ul>
         </li>
-        <li>본인 레포 (<code>my-team-03-bot</code>) → <code>Import</code></li>
+        <li>본인 레포 (<code>my-bot</code>) → <code>Import</code></li>
         <li>Framework Preset: <strong>Vite</strong> 자동 인식</li>
         <li><strong>Environment Variables</strong> 펼치기 → 다음 2개 추가:
           <table>
@@ -758,7 +758,7 @@ git push</code></pre>
       </div>
 
       <h3>6-3. 완료!</h3>
-      <p>1~3분 후 <code>https://my-team-03-bot.vercel.app</code> 같은 URL이 생성됩니다.</p>
+      <p>1~3분 후 <code>https://my-bot.vercel.app</code> 같은 URL이 생성됩니다.</p>
 
       <div class="info">
         <strong>💡 URL에 이상한 단어가 붙어있나요? (예: <code>my-bot-self-psi.vercel.app</code>)</strong>
@@ -799,7 +799,7 @@ git push</code></pre>
         <li><a href="https://developers.kakao.com/" target="_blank">https://developers.kakao.com/</a> 접속</li>
         <li>카카오 계정으로 로그인</li>
         <li><code>내 애플리케이션</code> → <code>애플리케이션 추가하기</code></li>
-        <li>앱 이름 입력 (예: "분개해 봇") + 사업자명 (본인 이름) → 생성</li>
+        <li>앱 이름 입력 (본인 봇 이름, 예: "내 봇") + 사업자명 (본인 이름) → 생성</li>
       </ol>
 
       <h3>7-2. JavaScript 키 복사</h3>
@@ -809,7 +809,7 @@ git push</code></pre>
       <ol>
         <li>좌측 <code>플랫폼</code> → <code>Web 플랫폼 등록</code></li>
         <li>사이트 도메인에 본인 Vercel URL 입력:
-          <pre><code>https://my-team-03-bot.vercel.app</code></pre>
+          <pre><code>https://my-bot.vercel.app</code></pre>
         </li>
         <li><strong>저장</strong> 클릭 — 등록 안 하면 카카오 SDK 작동 안 함</li>
       </ol>
@@ -818,7 +818,7 @@ git push</code></pre>
       <ol>
         <li>좌측 <code>제품 설정</code> → <code>카카오 로그인</code></li>
         <li><strong>활성화 설정</strong>: ON</li>
-        <li><strong>Redirect URI</strong> 등록: <code>https://my-team-03-bot.vercel.app/oauth</code> (사용 안 해도 등록 필요)</li>
+        <li><strong>Redirect URI</strong> 등록: <code>https://my-bot.vercel.app/oauth</code> (사용 안 해도 등록 필요)</li>
         <li><strong>동의 항목</strong> 설정: <code>닉네임</code> 필수, <code>이메일</code> 선택 (사용자가 거부 가능)</li>
       </ol>
 
@@ -1019,18 +1019,31 @@ git push origin main</code></pre>
         <li>비우고 <code>RESET</code> 누르면 기본값 (봇 이름 + 친절한 어시스턴트) 으로 복귀</li>
       </ol>
 
-      <h4>예시 — 분개해 봇 페르소나</h4>
-      <pre><code>당신은 회계 학습을 도와주는 친구 봇 '분개해' 입니다.
-21학번 F5 팀이 만들었어요.
-학생이 분개 문제 (차변/대변) 풀이를 어려워하면
-차근차근 단계별로 풀어주세요.
+      <h4>예시 페르소나 (참고용 — 본인 봇 컨셉으로 작성)</h4>
+
+      <p style="margin-top:8px"><strong>학습 친구형 (반말, 친근)</strong>:</p>
+      <pre><code>당신은 [본인 봇 이름] 봇입니다.
+[학생/사용자]가 [주제]를 어려워하면 차근차근 단계별로 풀어주세요.
 반말로 친근하게, 이모티콘은 가끔만 사용해요.
 모르는 것은 솔직히 모른다고 답합니다.</code></pre>
+
+      <p style="margin-top:12px"><strong>위로 친구형 (존댓말, 따뜻함)</strong>:</p>
+      <pre><code>당신은 [본인 봇 이름] 봇입니다.
+사용자가 힘든 이야기를 하면 판단하지 않고 공감해주세요.
+"그랬군요", "많이 힘드셨겠어요" 같은 공감 표현을 자주 사용해요.
+조언보다 들어주는 것을 우선하고, 부드러운 존댓말로 대화합니다.
+가끔 따뜻한 이모지 (🌸 💛 ☁️) 사용.</code></pre>
+
+      <p style="margin-top:12px"><strong>전문가형 (존댓말, 정확성 우선)</strong>:</p>
+      <pre><code>당신은 [본인 봇 이름] — [전문 분야] 전문 안내 봇입니다.
+사용자 질문에 정확하고 간결하게 답하세요.
+답변 형식: 핵심 결론 먼저, 그 다음 1~2문장 설명, 필요 시 예시.
+출처가 불명확한 정보는 추측하지 말고 "확인이 필요합니다" 라고 답합니다.</code></pre>
 
       <h4>좋은 페르소나 4가지 요소</h4>
       <table>
         <tr><th>요소</th><th>예시</th></tr>
-        <tr><td><strong>정체성</strong></td><td>"당신은 회계 학습 친구 '분개해' 봇입니다"</td></tr>
+        <tr><td><strong>정체성</strong></td><td>"당신은 [본인 봇 이름] 봇입니다"</td></tr>
         <tr><td><strong>말투</strong></td><td>"반말로 친근하게" / "존댓말로 정중히" / "전문가 톤으로"</td></tr>
         <tr><td><strong>답변 스타일</strong></td><td>"간결하게 2~3문장" / "예시 들어가며 자세히"</td></tr>
         <tr><td><strong>가치관/태도</strong></td><td>"모르면 모른다고 답함" / "추측 X" / "이모티콘 가끔"</td></tr>
@@ -1039,7 +1052,7 @@ git push origin main</code></pre>
       <div class="tip">
         <strong>💡 페르소나 떠오르지 않으면 AI 도움</strong>
         ChatGPT/Claude에 부탁:
-        <pre><code>"분개해 봇 (회계 학습 친구) 의 페르소나를
+        <pre><code>"[본인 봇 주제] 봇의 페르소나를
 시스템 프롬프트로 작성해줘. 300자 이내, 반말 톤."</code></pre>
         → 결과를 textarea에 붙여넣고 COMMIT.
       </div>
@@ -1119,7 +1132,7 @@ git push origin main</code></pre>
       <h3>10-2. 친구에게 공유</h3>
       <p>Vercel URL을 카카오톡으로:</p>
       <ul>
-        <li>URL: <code>https://my-team-03-bot.vercel.app</code></li>
+        <li>URL: <code>https://my-bot.vercel.app</code></li>
         <li>QR 생성: <a href="https://www.qr-code-generator.com" target="_blank">qr-code-generator.com</a></li>
       </ul>
 
