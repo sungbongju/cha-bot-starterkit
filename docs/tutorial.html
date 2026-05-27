@@ -253,10 +253,9 @@
       <li><a href="#step-5">본인 레포 만들기 + 푸시</a></li>
       <li><a href="#step-6">Vercel 배포</a></li>
       <li><a href="#step-7">카카오 SDK (로그인 + 공유)</a></li>
-      <li><a href="#step-8">RAG 청크 업로드 ⭐</a></li>
-      <li><a href="#step-9">VRoid 아바타 적용</a></li>
-      <li><a href="#step-10">봇 페르소나 설정 🎭</a></li>
-      <li><a href="#step-11">완성! 봇 공유하기</a></li>
+      <li><a href="#step-8">VRoid 아바타 적용 🎨</a></li>
+      <li><a href="#step-9">RAG 페이지: 페르소나 + 지식 ⭐</a></li>
+      <li><a href="#step-10">완성! 봇 공유하기 🎉</a></li>
     </ol>
   </aside>
 
@@ -276,7 +275,7 @@
       </table>
       <div class="info">
         <strong>💡 5단계 핵심 흐름</strong>
-        Step 2 GitHub 푸시 → Step 6 Vercel 배포 (TEAM_ID + 카카오 키) → Step 7 카카오 SDK → Step 8 RAG 청크 → Step 9 VRoid 아바타
+        Step 2 GitHub 푸시 → Step 6 Vercel 배포 (TEAM_ID + 카카오 키) → Step 7 카카오 SDK → Step 8 VRoid 아바타 → Step 9 페르소나 + RAG 청크
       </div>
     </section>
 
@@ -359,7 +358,7 @@ git init -b main</code></pre>
         <strong>📂 지금 폴더 구조</strong>
 <pre style="margin:8px 0 0">C:\projects\my-bot\          ← 본인 작업 폴더 (계속 여기서 작업)
   ├─ public\
-  │   └─ avatar.vrm          ← Step 9에서 본인 VRM 여기에 넣음
+  │   └─ avatar.vrm          ← Step 8에서 본인 VRM 여기에 넣음
   ├─ src\                    ← 코드 (수정 안 해도 됨!)
   ├─ api\                    ← Vercel 서버리스 함수
   ├─ index.html
@@ -531,7 +530,7 @@ git push</code></pre>
 
       <div class="warn">
         <strong>📌 본인 Vercel URL 메모해두세요</strong>
-        Step 7 (카카오), Step 8 (RAG), Step 11 (공유) 모두에서 이 URL이 필요합니다. 메모장에 임시 저장.
+        Step 7 (카카오), Step 9 (RAG), Step 10 (공유) 모두에서 이 URL이 필요합니다. 메모장에 임시 저장.
       </div>
 
       <div class="tip">
@@ -613,77 +612,24 @@ git push</code></pre>
       </div>
     </section>
 
-    <!-- STEP 8 (DIFFERENT — WEB UI) -->
+    <!-- STEP 8 — VRoid 아바타 (먼저 시각 확인) -->
     <section id="step-8">
-      <h2><span class="step-num">8</span>RAG 데이터 수정 — 나만의 지식 넣기 ⭐</h2>
+      <h2><span class="step-num">8</span>VRoid 아바타 적용 🎨</h2>
 
       <div class="info">
-        <strong>⭐ 이 자습서의 핵심 기능</strong>
-        SSH/Node 스크립트 <strong>전혀 사용 안 함</strong>. 텍스트만 붙여넣으면 AI가 자동으로 RAG 청크 생성 → 저장 1초.
+        <strong>💡 왜 아바타가 먼저?</strong>
+        봇 페이지에서 본인 캐릭터가 등장하는 걸 먼저 확인 → 동기 부여 ↑.
+        지식(RAG)은 그 다음 단계에서 천천히 추가합니다.
       </div>
 
-      <h3>8-1. 본인 팀 RAG 관리 페이지 접속</h3>
-      <p>운영자가 16팀 URL 전달. 예시 (분개해 = team_03):</p>
-      <pre><code>https://middleton.p-e.kr/finbot/team/03/rag</code></pre>
-      <p>본인 팀 번호 두 자리로 바꿔서 접속하세요 (예: <code>team/01/rag</code>, <code>team/16/rag</code>).</p>
-
-      <h3>8-2. 🆕 텍스트로 자동 만들기 (권장) ⭐</h3>
-      <p>학생 입장에서 가장 쉬운 방법. JSONL 형식 몰라도 됨.</p>
-      <ol>
-        <li>본인 봇 주제 텍스트 준비 (뉴스 기사, 강의 노트, 위키 등)</li>
-        <li>웹 페이지의 <strong>🆕 텍스트로 자동 만들기</strong> 박스 (초록색)에서:
-          <ul>
-            <li>방법 A: <code>📄 텍스트 파일 업로드</code> → <code>.txt</code> 또는 <code>.md</code> 선택</li>
-            <li>방법 B: textarea에 텍스트 직접 붙여넣기</li>
-          </ul>
-        </li>
-        <li><strong>🤖 AI로 청크 만들기</strong> 버튼 클릭</li>
-        <li>30초~1분 대기 (Gemma4가 분석)</li>
-        <li>✨ 생성된 청크 5~25개 미리보기 표시</li>
-        <li><strong>이대로 저장</strong> 클릭 → 봇에 즉시 반영. 마음에 안 들면 <strong>다시 만들기</strong>.</li>
-      </ol>
-
-      <div class="tip">
-        <strong>💡 텍스트 분량 가이드</strong>
-        한 번에 <strong>500~5,000자</strong> 권장 (청크 5~15개 생성). 너무 길면 (>10,000자) 나눠서 업로드.
-        최대 30,000자.
-      </div>
-
-      <div class="info">
-        <strong>📌 다른 팀에 영향 없음</strong>
-        본인 팀 URL로 들어가면 본인 팀 파일에만 저장됩니다.
-        16팀 데이터는 서로 완전히 분리되어 있습니다.
-      </div>
-
-      <div class="warn">
-        <strong>⚠️ 한글 깨짐 주의 — .txt/.md 파일은 UTF-8 인코딩</strong>
-        Windows 메모장 기본 저장 (ANSI) 으로 하면 한글 깨짐. VS Code 권장 (자동 UTF-8).
-        메모장이라면 "다른 이름으로 저장" 시 하단 인코딩 드롭다운 → <strong>UTF-8</strong>.
-      </div>
-
-      <h3>8-3. 봇에서 확인</h3>
-      <p>본인 봇 사이트 (<code>https://[본인-vercel-url].vercel.app</code>) 새로고침 → 청크에 들어간 내용 관련 질문 입력 → RAG 활용 답변 확인.</p>
-
-      <p>예시 (분개해 봇):</p>
-      <ul>
-        <li>"비품을 30만원에 외상으로 샀어. 분개해줘"</li>
-        <li>"직원 월급 250만원 줬어"</li>
-        <li>"은행에서 1000만원 빌렸어"</li>
-      </ul>
-    </section>
-
-    <!-- STEP 9 -->
-    <section id="step-9">
-      <h2><span class="step-num">9</span>VRoid 아바타 만들기</h2>
-
-      <p>봇의 3D 캐릭터를 본인 봇 페르소나에 맞게 만듭니다. <strong>두 가지 경로</strong>:</p>
+      <p>봇의 3D 캐릭터를 본인 봇 컨셉에 맞게 만듭니다. <strong>두 가지 경로</strong>:</p>
 
       <table>
         <tr><th></th><th>🚀 빠른 경로 (10분)</th><th>🎨 정공법 (30분~1시간)</th></tr>
         <tr><td>방법</td><td>VRoid Hub에서 무료 VRM 다운</td><td>VRoid Studio로 직접 제작</td></tr>
         <tr><td>설치</td><td>없음 (브라우저만)</td><td>VRoid Studio 1GB 다운</td></tr>
         <tr><td>커스터마이즈</td><td>제한적</td><td>완전 자유</td></tr>
-        <tr><td>추천 대상</td><td>시연 우선 / 빠르게 끝내고 싶음</td><td>본인 봇 페르소나 100% 반영</td></tr>
+        <tr><td>추천 대상</td><td>시연 우선 / 빠르게 끝내고 싶음</td><td>본인 봇 컨셉 100% 반영</td></tr>
       </table>
 
       <h3>🚀 빠른 경로: VRoid Hub에서 다운로드</h3>
@@ -691,7 +637,7 @@ git push</code></pre>
         <li><a href="https://hub.vroid.com/" target="_blank">https://hub.vroid.com/</a> 접속</li>
         <li>우측 필터 → <strong>License</strong> → <strong>Allow Redistribution</strong> 체크 (재배포 허용된 모델만)</li>
         <li>마음에 드는 캐릭터 클릭 → <strong>Download</strong> → <code>.vrm</code> 파일 받기</li>
-        <li>다운로드된 파일을 본인 프로젝트로 옮기는 건 <strong>9-5</strong> 진행</li>
+        <li>다운로드된 파일을 본인 프로젝트로 옮기는 건 <strong>8-5</strong> 진행</li>
       </ol>
 
       <div class="tip">
@@ -702,14 +648,14 @@ git push</code></pre>
 
       <hr style="margin:32px 0;border:none;border-top:1px solid var(--border)" />
 
-      <h3>🎨 정공법 9-1. VRoid Studio 다운로드 + 설치</h3>
+      <h3>🎨 정공법 8-1. VRoid Studio 다운로드 + 설치</h3>
       <ol>
         <li><a href="https://vroid.com/en/studio" target="_blank">https://vroid.com/en/studio</a> 접속</li>
         <li>Windows / Mac 버전 다운로드 (무료, 약 1GB)</li>
         <li>설치 후 실행 — 처음 켜면 튜토리얼 영상 자동 재생 (스킵 가능)</li>
       </ol>
 
-      <h3>🎨 정공법 9-2. 첫 화면 + 기본 캐릭터 선택</h3>
+      <h3>🎨 정공법 8-2. 첫 화면 + 기본 캐릭터 선택</h3>
       <ol>
         <li>왼쪽 위 <code>+ New</code> 버튼 클릭</li>
         <li>샘플 캐릭터 중 하나 선택:
@@ -722,7 +668,7 @@ git push</code></pre>
         <li>편집 화면 진입 — 좌측에 메뉴 카테고리들 표시됨</li>
       </ol>
 
-      <h3>🎨 정공법 9-3. 캐릭터 커스터마이즈</h3>
+      <h3>🎨 정공법 8-3. 캐릭터 커스터마이즈</h3>
       <p>좌측 메뉴 카테고리별로 수정:</p>
       <table>
         <tr><th>메뉴</th><th>설명</th><th>학생 팁</th></tr>
@@ -744,7 +690,7 @@ git push</code></pre>
         </ul>
       </div>
 
-      <h3>🎨 정공법 9-4. VRM으로 Export</h3>
+      <h3>🎨 정공법 8-4. VRM으로 Export</h3>
       <ol>
         <li>좌측 상단 <code>☰</code> (햄버거 메뉴) 클릭 → <code>Export</code> → <code>Export as VRM</code></li>
         <li><strong>VRM 1.0</strong> 선택 (VRM 0.x 는 일부 기능 호환 안 됨)</li>
@@ -756,7 +702,7 @@ git push</code></pre>
             <li><strong>Redistribution</strong>: <code>Allow</code></li>
           </ul>
         </li>
-        <li><strong>파일명</strong>: 본인이 원하는 이름 OK (예: <code>분개해.vrm</code>) — 다음 단계에서 어차피 <code>avatar.vrm</code> 으로 바꿉니다</li>
+        <li><strong>파일명</strong>: 본인이 원하는 이름 OK — 다음 단계에서 어차피 <code>avatar.vrm</code> 으로 바꿉니다</li>
         <li><strong>저장 위치 기억!</strong> 보통 <code>Desktop</code> 또는 <code>Documents\VRoid\avatars</code></li>
       </ol>
 
@@ -768,7 +714,7 @@ git push</code></pre>
 
       <hr style="margin:32px 0;border:none;border-top:1px solid var(--border)" />
 
-      <h3>9-5. 프로젝트에 적용 (두 경로 공통) ⚠️ 파일명 정확히 <code>avatar.vrm</code></h3>
+      <h3>8-5. 프로젝트에 적용 (두 경로 공통) ⚠️ 파일명 정확히 <code>avatar.vrm</code></h3>
 
       <div class="danger">
         <strong>🚨 파일명 규칙 (어기면 봇이 못 찾음)</strong>
@@ -779,25 +725,12 @@ git push</code></pre>
         </ul>
       </div>
 
-      <p>저장한 VRM 파일을 본인 프로젝트의 <code>public/</code> 폴더에 <strong><code>avatar.vrm</code> 이름으로</strong> 복사:</p>
+      <p>탐색기에서 VRM 파일을 <code>public/</code> 폴더에 복사하고 이름을 <code>avatar.vrm</code> 으로 변경. 그 다음 CMD에서:</p>
 
-      <pre><code>REM 예: 바탕화면의 "분개해.vrm" 을 my-bot/public/avatar.vrm 으로 복사
-copy "%USERPROFILE%\Desktop\분개해.vrm" "C:\projects\my-bot\public\avatar.vrm"
-
-REM 복사 확인
-dir C:\projects\my-bot\public\avatar.vrm</code></pre>
-
-      <p>파일 크기 표시되면 OK. 그리고 푸시:</p>
       <pre><code>cd C:\projects\my-bot
-git add public/avatar.vrm
-git status
-git commit -m "Add my VRoid avatar"
-git push</code></pre>
-
-      <div class="info">
-        <strong>✅ <code>git status</code> 에서 <code>new file: public/avatar.vrm</code> 표시되어야 정상</strong>
-        안 보이면 파일이 잘못된 폴더에 있거나 이름이 다른 경우. 9-5 박스 다시 확인.
-      </div>
+git add .
+git commit -m "avatar.vrm 추가"
+git push origin main</code></pre>
 
       <p>1~3분 후 Vercel 자동 재배포 → 새 아바타 등장.</p>
 
@@ -812,31 +745,42 @@ git push</code></pre>
       </div>
     </section>
 
-    <!-- STEP 10 -->
-    <section id="step-10">
-      <h2><span class="step-num">10</span>봇 페르소나 설정 🎭</h2>
-
-      <p>봇의 <strong>성격 · 말투 · 정체성</strong>을 자유 서술로 설정합니다.
-        RAG 페이지 상단의 <strong>🎭 봇 페르소나 (보라색 박스)</strong>에서 직접 입력하면 됩니다.</p>
+    <!-- STEP 9 — RAG 페이지 (페르소나 + 지식 통합) -->
+    <section id="step-9">
+      <h2><span class="step-num">9</span>RAG 페이지: 페르소나 + 지식 ⭐</h2>
 
       <div class="info">
-        <strong>💡 페르소나 vs 지식 (RAG 청크)</strong>
+        <strong>⭐ 이 자습서의 핵심 기능</strong>
+        한 페이지에서 봇의 <strong>성격(페르소나)</strong> + <strong>지식(RAG 청크)</strong> 둘 다 관리.
+        SSH/Node 스크립트 사용 안 함. 텍스트만 붙여넣으면 AI가 자동 변환.
+      </div>
+
+      <h3>9-1. 본인 팀 RAG 관리 페이지 접속</h3>
+      <p>운영자가 16팀 URL 전달. 예시 (분개해 = team_03):</p>
+      <pre><code>https://middleton.p-e.kr/finbot/team/03/rag</code></pre>
+      <p>본인 팀 번호 두 자리로 바꿔서 접속하세요 (예: <code>team/01/rag</code>, <code>team/15/rag</code>).</p>
+
+      <div class="info">
+        <strong>📌 페이지 구성</strong>
         <ul style="margin:6px 0">
-          <li><strong>페르소나</strong> = 봇이 "누구"인지, "어떻게" 답하는지 (성격/말투)</li>
-          <li><strong>RAG 청크</strong> = 봇이 "무엇"을 답하는지 (지식/사실)</li>
-          <li>둘이 분리되어 있어서 학생이 따로따로 관리 가능</li>
+          <li><strong>🎭 PERSONA</strong> (보라색) — 봇이 누구인지, 어떻게 답하는지</li>
+          <li><strong>✨ AUTO_CHUNKER</strong> (시안색) — 봇이 무엇을 답하는지 (지식)</li>
+          <li><strong>📚 RAG_CHUNKS</strong> (마젠타) — 등록된 청크 리스트</li>
         </ul>
       </div>
 
-      <h3>10-1. RAG 페이지에서 페르소나 입력</h3>
+      <hr style="margin:32px 0;border:none;border-top:1px solid var(--border)" />
+
+      <h3>9-2. 🎭 PERSONA 설정 (봇의 성격 · 말투 · 정체성)</h3>
+
       <ol>
-        <li>본인 팀 RAG 페이지 접속: <code>https://middleton.p-e.kr/finbot/team/[본인팀번호]/rag</code></li>
-        <li>최상단 <strong>🎭 봇 페르소나</strong> 보라색 박스</li>
-        <li>textarea 에 본인 봇 정체성 자유 서술 (최대 2000자)</li>
-        <li><code>💾 페르소나 저장</code> 버튼 클릭 → 다음 채팅부터 즉시 반영</li>
+        <li>최상단 보라색 <strong>PERSONA</strong> 박스의 textarea</li>
+        <li>본인 봇 정체성을 자유 서술 (최대 2000자)</li>
+        <li><code>COMMIT</code> 버튼 클릭 → 다음 채팅부터 즉시 반영</li>
+        <li>비우고 <code>RESET</code> 누르면 기본값 (봇 이름 + 친절한 어시스턴트) 으로 복귀</li>
       </ol>
 
-      <h3>10-2. 페르소나 작성 예시 (분개해 봇)</h3>
+      <h4>예시 — 분개해 봇 페르소나</h4>
       <pre><code>당신은 회계 학습을 도와주는 친구 봇 '분개해' 입니다.
 21학번 F5 팀이 만들었어요.
 학생이 분개 문제 (차변/대변) 풀이를 어려워하면
@@ -844,7 +788,7 @@ git push</code></pre>
 반말로 친근하게, 이모티콘은 가끔만 사용해요.
 모르는 것은 솔직히 모른다고 답합니다.</code></pre>
 
-      <h3>10-3. 좋은 페르소나 4가지 요소</h3>
+      <h4>좋은 페르소나 4가지 요소</h4>
       <table>
         <tr><th>요소</th><th>예시</th></tr>
         <tr><td><strong>정체성</strong></td><td>"당신은 회계 학습 친구 '분개해' 봇입니다"</td></tr>
@@ -854,50 +798,101 @@ git push</code></pre>
       </table>
 
       <div class="tip">
-        <strong>💡 페르소나 빈 채로 두면?</strong>
-        기본값으로 동작: <code>당신은 "[봇이름]" 봇입니다. 친절한 AI 어시스턴트로...</code>
-        본인 봇 컨셉이 명확하면 페르소나 작성 권장.
+        <strong>💡 페르소나 떠오르지 않으면 AI 도움</strong>
+        ChatGPT/Claude에 부탁:
+        <pre><code>"분개해 봇 (회계 학습 친구) 의 페르소나를
+시스템 프롬프트로 작성해줘. 300자 이내, 반말 톤."</code></pre>
+        → 결과를 textarea에 붙여넣고 COMMIT.
       </div>
 
-      <h3>10-4. (참고) AI 코딩 도구로 페르소나 만들기</h3>
-      <p>좋은 페르소나가 떠오르지 않으면 AI에게 부탁:</p>
-      <pre><code>"분개해 봇 (회계 학습 친구) 의 페르소나를
-시스템 프롬프트로 작성해줘. 300자 이내, 반말 톤."</code></pre>
-      <p>출력 받아서 페르소나 textarea 에 붙여넣고 저장.</p>
+      <hr style="margin:32px 0;border:none;border-top:1px solid var(--border)" />
 
+      <h3>9-3. ✨ AUTO_CHUNKER 로 지식 추가 (가장 핵심) ⭐</h3>
+      <p>학생 입장에서 가장 쉬운 방법. JSONL 형식 몰라도 됨. 평범한 텍스트만 던지면 AI가 알아서 Q&A 청크로 변환.</p>
+
+      <ol>
+        <li>본인 봇 주제 텍스트 준비 (뉴스 기사, 강의 노트, 위키, 책 한 챕터 등)</li>
+        <li>시안색 <strong>AUTO_CHUNKER</strong> 박스에서:
+          <ul>
+            <li>방법 A: <code>▸ upload .txt or .md</code> 클릭 → 파일 선택</li>
+            <li>방법 B: textarea에 텍스트 직접 붙여넣기</li>
+          </ul>
+        </li>
+        <li><code>GENERATE CHUNKS</code> 버튼 클릭</li>
+        <li>30초~1분 대기 (Gemma4가 분석)</li>
+        <li>✨ 생성된 청크 5~25개 미리보기 (PREVIEW)</li>
+        <li><code>COMMIT TO RAG</code> 클릭 → 봇에 즉시 반영. 마음에 안 들면 <code>RETRY</code>.</li>
+      </ol>
+
+      <div class="tip">
+        <strong>💡 텍스트 분량 가이드</strong>
+        한 번에 <strong>500~5,000자</strong> 권장 (청크 5~15개 생성). 너무 길면 (>10,000자) 나눠서 업로드.
+        최대 30,000자.
+      </div>
+
+      <div class="info">
+        <strong>📌 다른 팀에 영향 없음</strong>
+        본인 팀 URL로 들어가면 본인 팀 파일에만 저장. 16팀 데이터는 완전 격리.
+      </div>
+
+      <div class="warn">
+        <strong>⚠️ 한글 깨짐 주의 — .txt/.md 파일은 UTF-8 인코딩</strong>
+        Windows 메모장 기본 저장 (ANSI) 으로 하면 한글 깨짐. VS Code 권장 (자동 UTF-8).
+        메모장이라면 "다른 이름으로 저장" 시 하단 인코딩 드롭다운 → <strong>UTF-8</strong>.
+      </div>
+
+      <hr style="margin:32px 0;border:none;border-top:1px solid var(--border)" />
+
+      <h3>9-4. 봇에서 확인</h3>
+      <p>본인 봇 사이트 (<code>https://[본인-vercel-url].vercel.app</code>) 새로고침 → 채팅 → 청크 활용 답변 확인.</p>
+
+      <p>예시 (분개해 봇 청크 추가 후):</p>
       <ul>
-        <li><a href="https://claude.ai" target="_blank">Claude</a></li>
-        <li><a href="https://chatgpt.com" target="_blank">ChatGPT</a></li>
-        <li><a href="https://gemini.google.com" target="_blank">Google Gemini</a></li>
+        <li>"비품을 30만원에 외상으로 샀어. 분개해줘"</li>
+        <li>"직원 월급 250만원 줬어"</li>
+        <li>"은행에서 1000만원 빌렸어"</li>
+      </ul>
+
+      <p>예시 (토닥이 봇 청크 추가 후):</p>
+      <ul>
+        <li>"요즘 너무 힘들어요"</li>
+        <li>"불안할 때 어떻게 해요?"</li>
+        <li>"번아웃이 온 것 같아요"</li>
       </ul>
     </section>
 
-    <!-- STEP 11 -->
-    <section id="step-11">
-      <h2><span class="step-num">11</span>완성! 봇 공유하기</h2>
+    <!-- STEP 10 — 완성 & 공유 -->
+    <section id="step-10">
+      <h2><span class="step-num">10</span>완성! 봇 공유하기 🎉</h2>
 
-      <h3>11-1. 최종 체크리스트</h3>
+      <h3>10-1. 최종 체크리스트</h3>
       <table>
         <tr><th>항목</th><th>확인</th></tr>
         <tr><td>GitHub 레포에 코드 푸시 완료</td><td>✅</td></tr>
         <tr><td>Vercel 배포 성공 + TEAM_ID 환경변수 설정</td><td>✅</td></tr>
         <tr><td>카카오 SDK 키 본인 것 (VITE_KAKAO_JS_KEY)</td><td>✅</td></tr>
-        <tr><td>RAG 청크 50개 이상 추가</td><td>✅</td></tr>
-        <tr><td>VRM 아바타 교체</td><td>✅</td></tr>
-        <tr><td>봇 사이트에서 질문 → RAG 활용 답변 확인</td><td>✅</td></tr>
+        <tr><td>VRoid 아바타 적용 (Step 8)</td><td>✅</td></tr>
+        <tr><td>페르소나 설정 (Step 9-2)</td><td>✅</td></tr>
+        <tr><td>RAG 청크 10개 이상 추가 (Step 9-3)</td><td>✅</td></tr>
+        <tr><td>봇 사이트에서 질문 → 페르소나 + RAG 반영 답변 확인</td><td>✅</td></tr>
       </table>
 
-      <h3>11-2. 친구에게 공유</h3>
+      <h3>10-2. 친구에게 공유</h3>
       <p>Vercel URL을 카카오톡으로:</p>
       <ul>
         <li>URL: <code>https://my-team-03-bot.vercel.app</code></li>
         <li>QR 생성: <a href="https://www.qr-code-generator.com" target="_blank">qr-code-generator.com</a></li>
       </ul>
 
-      <h3>11-3. 개선 사이클</h3>
+      <h3>10-3. 개선 사이클</h3>
       <ol>
-        <li>친구 피드백 수집 ("이런 질문에 답 못해" 등)</li>
-        <li>RAG 페이지에서 청크 추가 (5초 × 청크 수)</li>
+        <li>친구 피드백 수집 ("이런 질문에 답 못해" / "톤이 좀..." 등)</li>
+        <li>RAG 페이지에서:
+          <ul>
+            <li>지식 부족 → AUTO_CHUNKER로 청크 추가 (1분)</li>
+            <li>톤 부족 → PERSONA 수정 (10초)</li>
+          </ul>
+        </li>
         <li>봇 사이트 새로고침 → 즉시 반영</li>
         <li>반복!</li>
       </ol>
