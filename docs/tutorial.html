@@ -102,6 +102,7 @@
     font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
     font-size: 0.88rem;
     line-height: 1.6;
+    position: relative; /* copy-btn 절대 위치 기준 */
   }
   code {
     background: #f5f0e6;
@@ -112,6 +113,48 @@
     font-size: 0.88em;
   }
   pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+  /* Copy button (Claude / GPT 스타일) */
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: -apple-system, system-ui, sans-serif;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    user-select: none;
+  }
+  pre:hover .copy-btn,
+  .copy-btn:focus {
+    opacity: 1;
+  }
+  .copy-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #f8fafc;
+  }
+  .copy-btn:active {
+    transform: scale(0.96);
+  }
+  .copy-btn.copied {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+    border-color: rgba(16, 185, 129, 0.4);
+    opacity: 1;
+  }
+  /* 모바일에서는 항상 보이게 */
+  @media (max-width: 768px) {
+    .copy-btn { opacity: 0.7; }
+  }
 
   /* Callout boxes */
   .tip {
@@ -919,6 +962,59 @@ git push</code></pre>
   <p>cha-bot-starterkit (Team Edition) · 2026 BizModel Bots</p>
   <p><a href="https://github.com/sungbongju/cha-bot-starterkit">GitHub</a></p>
 </footer>
+
+<script>
+  // 모든 <pre> 코드블록에 복사 버튼 자동 추가
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre').forEach((pre) => {
+      // 이미 버튼 있으면 스킵 (중복 방지)
+      if (pre.querySelector('.copy-btn')) return;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-btn';
+      btn.setAttribute('aria-label', '코드 복사');
+      btn.innerHTML = '📋 복사';
+
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const code = pre.querySelector('code') || pre;
+        const text = code.innerText || code.textContent || '';
+        try {
+          await navigator.clipboard.writeText(text.trim());
+          btn.innerHTML = '✓ 복사됨';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.innerHTML = '📋 복사';
+            btn.classList.remove('copied');
+          }, 1500);
+        } catch (err) {
+          // 폴백: 구식 브라우저 / 권한 거부
+          try {
+            const ta = document.createElement('textarea');
+            ta.value = text.trim();
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            btn.innerHTML = '✓ 복사됨';
+            btn.classList.add('copied');
+            setTimeout(() => {
+              btn.innerHTML = '📋 복사';
+              btn.classList.remove('copied');
+            }, 1500);
+          } catch (fallbackErr) {
+            btn.innerHTML = '⚠ 실패';
+          }
+        }
+      });
+
+      pre.appendChild(btn);
+    });
+  });
+</script>
 
 </body>
 </html>
