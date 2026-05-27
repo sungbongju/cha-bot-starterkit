@@ -437,13 +437,11 @@ git commit -m "수정 내용"
 git push</code></pre>
       </div>
 
-      <div class="info" style="background:#fef3c7;border-color:#f59e0b">
-        <strong>🛠 [고급] GitHub 계정 여러 개 쓰는 경우 (시연자/운영자용)</strong>
-        주계정 자격증명이 이미 캐시되어 있으면 부계정 레포로 푸시 시 <code>403 Permission denied</code> 에러가 납니다.<br>
-        해결: remote URL에 사용자명을 박아서 자격증명을 계정별로 분리:
-        <pre><code>git remote set-url origin https://본인_사용자명@github.com/본인_사용자명/my-team-03-bot.git
-git push -u origin main</code></pre>
-        브라우저 인증 창이 새로 뜨면 해당 계정으로 로그인. 한 번만 박으면 영구 적용.
+      <div class="warn">
+        <strong>⚠️ remote URL 정확히 확인</strong>
+        <code>git remote add origin ...</code> 명령에서 URL의 <strong>본인_사용자명</strong> 부분을 정확히 박으세요.
+        예) GitHub 사용자명이 <code>kim-soyeon</code> 이면 <code>https://github.com/kim-soyeon/my-team-03-bot.git</code>.
+        잘못 박으면 권한 없는 다른 레포로 push 시도해서 막힙니다.
       </div>
     </section>
 
