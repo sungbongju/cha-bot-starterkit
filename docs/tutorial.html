@@ -212,7 +212,7 @@
       <li><a href="#step-7">카카오 SDK (로그인 + 공유)</a></li>
       <li><a href="#step-8">RAG 청크 업로드 ⭐</a></li>
       <li><a href="#step-9">VRoid 아바타 적용</a></li>
-      <li><a href="#step-10">페르소나 다듬기</a></li>
+      <li><a href="#step-10">봇 페르소나 설정 🎭</a></li>
       <li><a href="#step-11">완성! 봇 공유하기</a></li>
     </ol>
   </aside>
@@ -612,32 +612,13 @@ git push</code></pre>
         16팀 데이터는 서로 완전히 분리되어 있습니다.
       </div>
 
-      <h3>8-3. 청크 직접 추가 — JSONL 방식 (개발자용, 선택)</h3>
-      <p>JSONL 형식 알고 있는 사람용. 정확한 형식으로 청크를 컨트롤하고 싶을 때.</p>
-
-      <p>JSONL 예시 (분개해 봇):</p>
-      <pre><code>{"id":"acc-001","question":"분개가 뭐예요?","answer":"거래를 차변과 대변으로 나누어 기록하는 회계 절차입니다."}
-{"id":"acc-002","question":"차변과 대변의 차이?","answer":"차변(왼쪽)은 자산 증가, 대변(오른쪽)은 부채 증가를 기록합니다."}</code></pre>
-
-      <ol>
-        <li>본인 청크들을 <code>chunks.jsonl</code> 파일로 저장 (VS Code 권장 — 자동 UTF-8)</li>
-        <li>웹 페이지 <strong>📝 청크 직접 추가</strong> 섹션 → <code>📎 JSONL 파일 업로드</code> → 파일 선택</li>
-        <li>자동 검증 메시지 확인:
-          <ul>
-            <li>✅ "N개 청크 모두 유효" → 다음 단계</li>
-            <li>⚠️ "줄 X: ..." → 해당 줄 수정 후 다시 업로드</li>
-          </ul>
-        </li>
-        <li><code>청크 추가</code> 버튼 클릭 → "N개 추가됨" 성공 메시지</li>
-      </ol>
-
       <div class="warn">
-        <strong>⚠️ 한글 깨짐 주의 — 파일 인코딩은 반드시 UTF-8</strong>
+        <strong>⚠️ 한글 깨짐 주의 — .txt/.md 파일은 UTF-8 인코딩</strong>
         Windows 메모장 기본 저장 (ANSI) 으로 하면 한글 깨짐. VS Code 권장 (자동 UTF-8).
         메모장이라면 "다른 이름으로 저장" 시 하단 인코딩 드롭다운 → <strong>UTF-8</strong>.
       </div>
 
-      <h3>8-4. 봇에서 확인</h3>
+      <h3>8-3. 봇에서 확인</h3>
       <p>본인 봇 사이트 (<code>https://[본인-vercel-url].vercel.app</code>) 새로고침 → 청크에 들어간 내용 관련 질문 입력 → RAG 활용 답변 확인.</p>
 
       <p>예시 (분개해 봇):</p>
@@ -790,31 +771,62 @@ git push</code></pre>
 
     <!-- STEP 10 -->
     <section id="step-10">
-      <h2><span class="step-num">10</span>AI 코딩 도구로 페르소나 변경</h2>
+      <h2><span class="step-num">10</span>봇 페르소나 설정 🎭</h2>
 
-      <p>봇의 말투, 성격, 대화 스타일을 AI 도구로 한 번에 바꿉니다.</p>
+      <p>봇의 <strong>성격 · 말투 · 정체성</strong>을 자유 서술로 설정합니다.
+        RAG 페이지 상단의 <strong>🎭 봇 페르소나 (보라색 박스)</strong>에서 직접 입력하면 됩니다.</p>
 
-      <h3>10-1. 페르소나 설정 위치</h3>
-      <p>Team Edition 에서는 페르소나(시스템 프롬프트)가 두 곳에 있을 수 있습니다:</p>
+      <div class="info">
+        <strong>💡 페르소나 vs 지식 (RAG 청크)</strong>
+        <ul style="margin:6px 0">
+          <li><strong>페르소나</strong> = 봇이 "누구"인지, "어떻게" 답하는지 (성격/말투)</li>
+          <li><strong>RAG 청크</strong> = 봇이 "무엇"을 답하는지 (지식/사실)</li>
+          <li>둘이 분리되어 있어서 학생이 따로따로 관리 가능</li>
+        </ul>
+      </div>
+
+      <h3>10-1. RAG 페이지에서 페르소나 입력</h3>
+      <ol>
+        <li>본인 팀 RAG 페이지 접속: <code>https://middleton.p-e.kr/finbot/team/[본인팀번호]/rag</code></li>
+        <li>최상단 <strong>🎭 봇 페르소나</strong> 보라색 박스</li>
+        <li>textarea 에 본인 봇 정체성 자유 서술 (최대 2000자)</li>
+        <li><code>💾 페르소나 저장</code> 버튼 클릭 → 다음 채팅부터 즉시 반영</li>
+      </ol>
+
+      <h3>10-2. 페르소나 작성 예시 (분개해 봇)</h3>
+      <pre><code>당신은 회계 학습을 도와주는 친구 봇 '분개해' 입니다.
+21학번 F5 팀이 만들었어요.
+학생이 분개 문제 (차변/대변) 풀이를 어려워하면
+차근차근 단계별로 풀어주세요.
+반말로 친근하게, 이모티콘은 가끔만 사용해요.
+모르는 것은 솔직히 모른다고 답합니다.</code></pre>
+
+      <h3>10-3. 좋은 페르소나 4가지 요소</h3>
+      <table>
+        <tr><th>요소</th><th>예시</th></tr>
+        <tr><td><strong>정체성</strong></td><td>"당신은 회계 학습 친구 '분개해' 봇입니다"</td></tr>
+        <tr><td><strong>말투</strong></td><td>"반말로 친근하게" / "존댓말로 정중히" / "전문가 톤으로"</td></tr>
+        <tr><td><strong>답변 스타일</strong></td><td>"간결하게 2~3문장" / "예시 들어가며 자세히"</td></tr>
+        <tr><td><strong>가치관/태도</strong></td><td>"모르면 모른다고 답함" / "추측 X" / "이모티콘 가끔"</td></tr>
+      </table>
+
+      <div class="tip">
+        <strong>💡 페르소나 빈 채로 두면?</strong>
+        기본값으로 동작: <code>당신은 "[봇이름]" 봇입니다. 친절한 AI 어시스턴트로...</code>
+        본인 봇 컨셉이 명확하면 페르소나 작성 권장.
+      </div>
+
+      <h3>10-4. (참고) AI 코딩 도구로 페르소나 만들기</h3>
+      <p>좋은 페르소나가 떠오르지 않으면 AI에게 부탁:</p>
+      <pre><code>"분개해 봇 (회계 학습 친구) 의 페르소나를
+시스템 프롬프트로 작성해줘. 300자 이내, 반말 톤."</code></pre>
+      <p>출력 받아서 페르소나 textarea 에 붙여넣고 저장.</p>
+
       <ul>
-        <li><strong>RAG 청크 자체</strong>: 봇 인사말/소개를 첫 청크로 등록 (가장 쉬움)</li>
-        <li><strong>미들턴 백엔드</strong>: 운영자와 협의해서 팀별 시스템 프롬프트 커스터마이즈 가능</li>
-      </ul>
-
-      <h3>10-2. 청크로 페르소나 정의 (추천)</h3>
-      <p>웹 RAG 관리 페이지에서 첫 청크로:</p>
-      <pre><code>{"id":"persona-01","question":"안녕","answer":"안녕! 나는 '분개해' 봇이야. 회계 분개 풀어주는 학습 친구야. 어떤 문제 같이 풀어볼래?"}
-{"id":"persona-02","question":"너는 누구야","answer":"21학번 F5 팀이 만든 회계 학습 봇 '분개해'예요. 분개 문제 입력하면 차변/대변 풀이와 설명을 드려요."}</code></pre>
-
-      <h3>10-3. (고급) AI 코딩 도구</h3>
-      <p>코드 자체를 수정하려면:</p>
-      <ul>
-        <li><a href="https://claude.com/claude-code" target="_blank">Claude Code (CLI)</a> — 가장 강력</li>
-        <li><a href="https://chatgpt.com" target="_blank">ChatGPT</a> — 코드 복붙</li>
+        <li><a href="https://claude.ai" target="_blank">Claude</a></li>
+        <li><a href="https://chatgpt.com" target="_blank">ChatGPT</a></li>
         <li><a href="https://gemini.google.com" target="_blank">Google Gemini</a></li>
       </ul>
-
-      <p>Team Edition 의 경우 백엔드(미들턴)에 system prompt 가 있어서, 학생이 직접 수정하긴 어렵습니다. RAG 청크로 페르소나를 표현하는 게 가장 실용적.</p>
     </section>
 
     <!-- STEP 11 -->
