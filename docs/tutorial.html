@@ -499,14 +499,32 @@ git push</code></pre>
       <h3>6-1. Vercel 가입</h3>
       <ol>
         <li><a href="https://vercel.com/signup" target="_blank">https://vercel.com/signup</a> 접속</li>
-        <li><strong>"Continue with GitHub"</strong> 선택</li>
-        <li>권한 승인</li>
+        <li><strong>"Continue with GitHub"</strong> 선택 → GitHub 권한 승인</li>
+        <li>(첫 가입 시) <strong>SMS 인증</strong> 화면 — 본인 휴대폰 번호 입력 → 6자리 코드 받아 입력</li>
+        <li>가입 완료 → Vercel 대시보드 진입</li>
       </ol>
+
+      <div class="warn">
+        <strong>⚠️ 학생 흔한 마찰점 — Vercel 첫 가입 시 추가 단계</strong>
+        <ul style="margin:6px 0">
+          <li><strong>SMS 인증</strong>: 본인 폰번호로 6자리 코드 (의무, 1분 소요)</li>
+          <li><strong>이름/팀 입력</strong>: "First Name" "Hobby" 같은 입력 — 대충 채워도 OK</li>
+          <li><strong>유료 플랜 추천 팝업</strong>: <code>Continue with Hobby</code> (무료) 선택 — 학생 봇엔 무료로 충분</li>
+        </ul>
+      </div>
 
       <h3>6-2. 프로젝트 배포</h3>
       <ol>
         <li>대시보드에서 <code>Add New</code> → <code>Project</code></li>
-        <li>본인 GitHub 레포 (<code>my-team-03-bot</code>) 선택 → <code>Import</code></li>
+        <li>본인 GitHub 레포 안 보이면 → <code>Adjust GitHub App Permissions</code> 클릭:
+          <ul>
+            <li>"Install Vercel" GitHub 앱 권한 설정 화면 열림</li>
+            <li><strong>Only select repositories</strong> 선택 → 본인 레포 (예: <code>my-team-03-bot</code>) 체크</li>
+            <li>또는 <strong>All repositories</strong> 선택 (간단, 모든 본인 레포 접근 허용)</li>
+            <li><code>Install</code> 또는 <code>Save</code> 클릭 → 자동으로 Vercel Import 화면 복귀</li>
+          </ul>
+        </li>
+        <li>본인 레포 (<code>my-team-03-bot</code>) → <code>Import</code></li>
         <li>Framework Preset: <strong>Vite</strong> 자동 인식</li>
         <li><strong>Environment Variables</strong> 펼치기 → 다음 2개 추가:
           <table>
@@ -517,6 +535,13 @@ git push</code></pre>
         </li>
         <li><code>Deploy</code> 클릭</li>
       </ol>
+
+      <div class="warn">
+        <strong>⚠️ "내 레포가 안 보여요" 해결</strong>
+        Vercel은 처음에 GitHub의 일부 권한만 갖고 있어서 모든 레포가 안 보입니다.
+        Import 화면에 <code>Adjust GitHub App Permissions</code> (또는 <code>Configure GitHub App</code>) 링크가 있어요.
+        클릭 → GitHub 앱 설치 화면 → 본인 레포 권한 부여 → 자동 복귀.
+      </div>
 
       <h3>6-3. 완료!</h3>
       <p>1~3분 후 <code>https://my-team-03-bot.vercel.app</code> 같은 URL이 생성됩니다.</p>
