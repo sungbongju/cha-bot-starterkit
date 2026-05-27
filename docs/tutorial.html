@@ -281,7 +281,22 @@
 
     <!-- STEP 1 -->
     <section id="step-1">
-      <h2><span class="step-num">1</span>사전 준비 — Node.js, Git 설치 확인</h2>
+      <h2><span class="step-num">1</span>사전 준비 — Git 설치 확인 (Node.js는 선택)</h2>
+
+      <div class="info">
+        <strong>💡 진짜 필요한 건 Git 하나뿐</strong>
+        <p style="margin:6px 0 0">
+          Vercel이 알아서 빌드 (npm install / build) 하기 때문에, 로컬에서 미리보기 안 할 거면
+          <strong>Node.js 설치 불필요</strong>. 대부분 학생은 Git만 깔고 진행하면 됩니다.
+        </p>
+      </div>
+
+      <table style="margin-top:12px">
+        <tr><th>도구</th><th>필요도</th><th>이유</th></tr>
+        <tr><td><strong>Git</strong></td><td>✅ 필수</td><td>git clone, git push 에 사용</td></tr>
+        <tr><td><strong>Node.js + npm</strong></td><td>⚪ 선택</td><td>로컬 <code>npm run dev</code> 미리보기 때만. Vercel 배포는 불필요</td></tr>
+        <tr><td><strong>VS Code</strong></td><td>⚪ 선택</td><td>코드 보고 싶을 때. 메모장도 OK</td></tr>
+      </table>
 
       <h3>1-0. CMD (명령 프롬프트) 열기</h3>
       <p>윈도우에서 CMD 여는 방법 (셋 중 아무거나):</p>
@@ -292,7 +307,15 @@
       </ul>
       <p>검은색 창 (또는 흰색) 이 뜨면 OK. 여기에 명령어를 입력합니다.</p>
 
-      <h3>1-1. Node.js 확인</h3>
+      <h3>1-1. (선택) Node.js 확인 — 로컬 미리보기 안 하면 스킵 OK</h3>
+
+      <div class="tip">
+        <strong>💡 학생 대부분은 이 단계 건너뛰기 권장</strong>
+        Vercel이 자동으로 빌드해주므로 Node.js 로컬 설치 불필요.
+        본인 봇 페이지를 Vercel 배포 전에 <strong>로컬에서 미리보고 싶은 사람만</strong> 설치하세요.
+        <strong>1-2 (Git) 부터 보세요.</strong>
+      </div>
+
       <pre><code>node --version
 npm --version</code></pre>
 
@@ -379,11 +402,13 @@ npm --version</code></pre>
       </ol>
 
       <div class="info">
-        <strong>📌 정리 — Step 1 끝나면 다음이 모두 작동해야 합니다</strong>
-        <pre style="margin:8px 0 0"><code>node --version    → v20.x.x
-npm --version     → 10.x.x
-git --version     → git version 2.x.x</code></pre>
-        모두 OK면 Step 2로 진행. 하나라도 에러면 설치 마법사 다시 또는 CMD 새 창.
+        <strong>📌 정리 — Step 1 끝나면 다음이 작동해야 합니다</strong>
+        <pre style="margin:8px 0 0"><code>git --version     → git version 2.x.x   (필수)
+
+# 선택 (로컬 미리보기 할 때만)
+node --version    → v20.x.x
+npm --version     → 10.x.x</code></pre>
+        Git만 OK면 Step 2 진행. Node.js는 Vercel이 알아서 빌드해주므로 안 깔아도 됨.
       </div>
     </section>
 
