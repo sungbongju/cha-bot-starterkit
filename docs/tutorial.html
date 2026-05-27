@@ -354,6 +354,15 @@ npm --version</code></pre>
       </div>
 
       <h4>📥 Node.js 설치 절차 (10분)</h4>
+
+      <div class="tip">
+        <strong>⚡ 빠른 설치 — CMD 한 줄</strong>
+        <pre style="margin:8px 0 0"><code>winget install --id OpenJS.NodeJS.LTS -e --source winget</code></pre>
+        Mac: <code>brew install node</code><br>
+        설치 후 <strong>CMD 새 창 열기</strong>.
+      </div>
+
+      <p>아니면 전통적인 GUI 설치:</p>
       <ol>
         <li><a href="https://nodejs.org/ko" target="_blank">https://nodejs.org/ko</a> 접속</li>
         <li>좌측 큰 버튼 <strong>"LTS" (장기 지원)</strong> 클릭 → 설치 파일 다운로드 (.msi 파일)
@@ -392,12 +401,21 @@ npm --version</code></pre>
       </div>
 
       <h4>📥 Git 설치 절차 (5분)</h4>
+
+      <div class="tip">
+        <strong>⚡ 빠른 설치 — CMD 한 줄 (Windows 10/11 권장)</strong>
+        <pre style="margin:8px 0 0"><code>winget install --id Git.Git -e --source winget</code></pre>
+        Windows 10/11 기본 내장 <strong>winget</strong> 으로 한 번에 설치 (1~2분). 마법사 클릭 X.<br>
+        Mac: <code>brew install git</code> (Homebrew 깐 사람) 또는 <code>xcode-select --install</code> 로 자동 설치 안내.<br>
+        설치 후 <strong>CMD 새 창 열기</strong>.
+      </div>
+
+      <p>아니면 전통적인 GUI 설치:</p>
       <ol>
         <li><a href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a> 접속 → 자동으로 .exe 다운로드 시작</li>
         <li>다운로드된 <code>.exe</code> 실행 → 설치 마법사:
           <ul>
             <li>대부분 화면 <strong>Next</strong> 클릭 (기본값 OK)</li>
-            <li>"Choosing the default editor" 화면 → <strong>"Use Visual Studio Code as Git's default editor"</strong> 선택 권장 (VS Code 깐 사람만)</li>
             <li>나머지 다 Next → <strong>Install</strong> → 1~2분 소요</li>
             <li><strong>Finish</strong></li>
           </ul>
