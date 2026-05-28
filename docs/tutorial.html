@@ -291,7 +291,7 @@
   <aside class="sidebar">
     <h3>📚 단계별 목차</h3>
     <ol>
-      <li><a href="#step-1">사전 준비 (Node.js, Git)</a></li>
+      <li><a href="#step-1">사전 준비 (Git 설치)</a></li>
       <li><a href="#step-2">GitHub 계정 + Git config</a></li>
       <li><a href="#step-3">템플릿 클론</a></li>
       <li><a href="#step-4">환경 변수 (.env, 선택)</a></li>
@@ -326,7 +326,7 @@
 
     <!-- STEP 1 -->
     <section id="step-1">
-      <h2><span class="step-num">1</span>사전 준비 — Git 설치 확인 (Node.js는 선택)</h2>
+      <h2><span class="step-num">1</span>사전 준비 — Git 설치</h2>
 
       <div class="info" style="background:#fef3c7;border-color:#f59e0b">
         <strong>🍎 Mac 사용자 안내</strong>
@@ -344,7 +344,7 @@
           <tr><td><code>type [파일] | findstr [검색어]</code></td><td><code>grep [검색어] [파일]</code></td></tr>
         </table>
         <p style="margin:8px 0 0;font-size:0.9em">
-          <strong>git, npm, node, vercel, gh 명령어는 Windows/Mac 동일.</strong>
+          <strong>git, vercel, gh 명령어는 Windows/Mac 동일.</strong>
           Mac에 Git은 보통 기본 설치돼 있음 (없으면 Xcode Command Line Tools 자동 안내).
         </p>
       </div>
@@ -352,15 +352,14 @@
       <div class="info">
         <strong>💡 진짜 필요한 건 Git 하나뿐</strong>
         <p style="margin:6px 0 0">
-          Vercel이 알아서 빌드 (npm install / build) 하기 때문에, 로컬에서 미리보기 안 할 거면
-          <strong>Node.js 설치 불필요</strong>. 대부분 학생은 Git만 깔고 진행하면 됩니다.
+          코드 빌드/실행은 전부 <strong>Vercel이 클라우드에서 자동 처리</strong>합니다.
+          학생 PC에는 <strong>Git만 깔면 끝</strong>입니다.
         </p>
       </div>
 
       <table style="margin-top:12px">
         <tr><th>도구</th><th>필요도</th><th>이유</th></tr>
         <tr><td><strong>Git</strong></td><td>✅ 필수</td><td>git clone, git push 에 사용</td></tr>
-        <tr><td><strong>Node.js + npm</strong></td><td>⚪ 선택</td><td>로컬 <code>npm run dev</code> 미리보기 때만. Vercel 배포는 불필요</td></tr>
         <tr><td><strong>VS Code</strong></td><td>⚪ 선택</td><td>코드 보고 싶을 때. 메모장도 OK</td></tr>
       </table>
 
@@ -373,59 +372,7 @@
       </ul>
       <p>검은색 창 (또는 흰색) 이 뜨면 OK. 여기에 명령어를 입력합니다.</p>
 
-      <h3>1-1. (선택) Node.js 확인 — 로컬 미리보기 안 하면 스킵 OK</h3>
-
-      <div class="tip">
-        <strong>💡 학생 대부분은 이 단계 건너뛰기 권장</strong>
-        Vercel이 자동으로 빌드해주므로 Node.js 로컬 설치 불필요.
-        본인 봇 페이지를 Vercel 배포 전에 <strong>로컬에서 미리보고 싶은 사람만</strong> 설치하세요.
-        <strong>1-2 (Git) 부터 보세요.</strong>
-      </div>
-
-      <pre><code>node --version
-npm --version</code></pre>
-
-      <div class="info">
-        <strong>✅ 설치되어 있으면 이렇게 나옴</strong>
-        <pre style="margin:8px 0 0"><code>v20.10.0
-10.2.3</code></pre>
-        → 버전 숫자 보이면 통과. <strong>1-2 로 이동</strong>.
-      </div>
-
-      <div class="danger">
-        <strong>❌ 설치 안 되어 있으면 이렇게 나옴</strong>
-        <pre style="margin:8px 0 0"><code>'node'은(는) 내부 또는 외부 명령... 명령으로 인식되지 않습니다.</code></pre>
-        → 아래 설치 절차 진행.
-      </div>
-
-      <h4>📥 Node.js 설치</h4>
-
-      <div class="os-tabs">
-        <div class="tab-nav">
-          <button class="tab-btn" data-os="win">🪟 Windows</button>
-          <button class="tab-btn" data-os="mac">🍎 Mac</button>
-        </div>
-        <div class="tab-panel" data-os="win">
-          <p><strong>한 줄 설치 (권장)</strong> — Windows 10/11 기본 내장 winget:</p>
-          <pre><code>winget install --id OpenJS.NodeJS.LTS -e --source winget</code></pre>
-          <p style="font-size:13px;color:#6b7280">설치 후 <strong>CMD 새 창 열기</strong> 필수.</p>
-          <p style="margin-top:12px">또는 GUI: <a href="https://nodejs.org/ko" target="_blank">nodejs.org/ko</a> → <strong>LTS</strong> 다운로드 → 마법사 Next 다 누름.</p>
-        </div>
-        <div class="tab-panel" data-os="mac">
-          <p><strong>Homebrew 사용</strong>:</p>
-          <pre><code>brew install node</code></pre>
-          <p style="font-size:13px;color:#6b7280">Homebrew 없으면 먼저 설치:</p>
-          <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
-          <p style="margin-top:12px">또는 GUI: <a href="https://nodejs.org/ko" target="_blank">nodejs.org/ko</a> → <strong>LTS .pkg</strong> 다운 → 더블클릭 설치.</p>
-        </div>
-      </div>
-
-      <div class="warn">
-        <strong>⚠️ 설치 후 CMD/Terminal 새 창 열기 필수</strong>
-        PATH 환경변수 갱신을 위해. 그래도 안 되면 PC 재부팅.
-      </div>
-
-      <h3>1-2. Git 확인</h3>
+      <h3>1-1. Git 확인</h3>
       <pre><code>git --version</code></pre>
 
       <div class="info">
@@ -461,18 +408,14 @@ npm --version</code></pre>
         </div>
       </div>
 
-      <h3>1-3. (선택) 코드 에디터</h3>
+      <h3>1-2. (선택) 코드 에디터</h3>
       <p>이 자습서는 코드 거의 안 만짐 — <strong>설치 불필요</strong>.
         나중에 코드 보고 싶을 때만 <a href="https://code.visualstudio.com/" target="_blank">VS Code</a> 또는 메모장 사용.</p>
 
       <div class="info">
         <strong>📌 정리 — Step 1 끝나면 다음이 작동해야 합니다</strong>
-        <pre style="margin:8px 0 0"><code>git --version     → git version 2.x.x   (필수)
-
-# 선택 (로컬 미리보기 할 때만)
-node --version    → v20.x.x
-npm --version     → 10.x.x</code></pre>
-        Git만 OK면 Step 2 진행. Node.js는 Vercel이 알아서 빌드해주므로 안 깔아도 됨.
+        <pre style="margin:8px 0 0"><code>git --version     → git version 2.x.x   (필수)</code></pre>
+        Git만 OK면 Step 2 진행. 코드 빌드/실행은 Vercel이 클라우드에서 자동으로 처리합니다.
       </div>
     </section>
 
@@ -565,18 +508,6 @@ git init -b main</code></pre>
   └─ package.json</pre>
       </div>
 
-      <h3>3-4. (선택) 로컬에서 실행해보기</h3>
-      <p>Vercel 배포로 바로 가도 되지만, 로컬에서 미리 보고 싶으면:</p>
-      <pre><code>npm install
-npm run dev</code></pre>
-      <p><code>npm install</code> 은 1~3분 소요. 끝나면 <code>http://localhost:5173</code> 접속.</p>
-      <p>채팅/음성은 Vercel 배포 후에만 작동 (백엔드 호출 필요). 아바타 화면만 확인 가능.</p>
-      <p>종료: CMD에서 <code>Ctrl + C</code> → <code>Y</code></p>
-
-      <div class="tip">
-        <strong>💡 학생들 대부분 이 단계 스킵해도 OK</strong>
-        <code>npm install</code> 은 500MB 디스크 사용 + 시간 걸립니다. Vercel 배포 (Step 6) 가 어차피 빌드해주므로 로컬 테스트 굳이 안 해도 됩니다.
-      </div>
     </section>
 
     <!-- STEP 4 (DIFFERENT) -->
@@ -588,20 +519,13 @@ npm run dev</code></pre>
         OpenAI API 키 <strong>불필요</strong>. 대신 <code>TEAM_ID</code>(본인 팀 번호)와 <code>VITE_KAKAO_JS_KEY</code> 만 필요.
       </div>
 
-      <div class="warn">
-        <strong>⚡ 이 단계는 선택입니다 (로컬 실행할 때만 필요)</strong>
-        Vercel 배포 (Step 6)에 환경변수를 직접 등록할 거라, 로컬에서 <code>npm run dev</code> 안 하면 <code>.env</code> 파일은 만들 필요 없습니다. 본인 팀 번호 확인만 (4-2) 하고 Step 5로 넘어가도 OK.
+      <div class="info">
+        <strong>📌 이 단계가 하는 일</strong>
+        본인 팀 번호 (TEAM_ID) 와 카카오 키 (VITE_KAKAO_JS_KEY) 두 가지를 메모해두는 단계입니다.
+        실제 등록은 <strong>Step 6 (Vercel 배포)</strong> 에서 진행합니다 — 로컬에서 코드 실행 안 하므로 <code>.env</code> 파일은 만들 필요 없습니다.
       </div>
 
-      <h3>4-1. (선택) .env 파일 생성</h3>
-      <p>메모장 (또는 VS Code) 로 새 파일 <code>.env</code> 생성 → 다음 입력:</p>
-      <pre><code># 본인 팀 번호 (01 ~ 16, 운영자에게 받음)
-TEAM_ID=03
-
-# 카카오 JavaScript SDK 키 (Step 7에서 설정)
-VITE_KAKAO_JS_KEY=your_kakao_js_key_here</code></pre>
-
-      <h3>4-2. 본인 팀 번호 확인</h3>
+      <h3>4-1. 본인 팀 번호 확인</h3>
       <p>16팀 매핑 — 본인 팀 찾기:</p>
       <table>
         <tr><th>팀 번호</th><th>봇 이름</th><th>학생</th></tr>
@@ -629,26 +553,9 @@ VITE_KAKAO_JS_KEY=your_kakao_js_key_here</code></pre>
         <code>.gitignore</code>에 <code>.env</code>가 이미 포함되어 있는지 확인하세요.
       </div>
 
-      <h3>4-3. .gitignore 확인</h3>
-
-      <div class="os-tabs">
-        <div class="tab-nav">
-          <button class="tab-btn" data-os="win">🪟 Windows</button>
-          <button class="tab-btn" data-os="mac">🍎 Mac</button>
-        </div>
-        <div class="tab-panel" data-os="win">
-          <pre><code>findstr ".env" .gitignore</code></pre>
-        </div>
-        <div class="tab-panel" data-os="mac">
-          <pre><code>grep ".env" .gitignore</code></pre>
-        </div>
-      </div>
-
-      <p><code>.env</code> 또는 <code>.env*</code>가 출력되면 OK.</p>
-
       <div class="tip">
         <strong>💡 카카오 키는 Step 7에서</strong>
-        카카오 키 발급 전이라 <code>VITE_KAKAO_JS_KEY</code> 부분은 일단 비워두거나 임시값으로 두셔도 됩니다. Step 7 에서 발급 후 채워넣으세요.
+        카카오 키는 아직 발급 전입니다. 일단 본인 팀 번호만 기억해두고 Step 5로 넘어가세요. 카카오 키는 Step 7에서 발급받고 Step 6에서 Vercel에 함께 등록합니다.
       </div>
     </section>
 
