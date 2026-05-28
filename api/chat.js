@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     // Team Edition: batch fallback to per-team Gemma4 endpoint (matches chat-stream.js).
     const TEAM_ID = process.env.TEAM_ID || '00';
     const UPSTREAM = process.env.ONPREMISE_CHAT_URL
-      || `https://middleton.p-e.kr/api/team/${TEAM_ID}/chat`;
+      || `https://middleton.p-e.kr/finbot/api/team/${TEAM_ID}/chat`;
     const response = await fetch(UPSTREAM, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
