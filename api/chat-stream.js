@@ -15,11 +15,11 @@
 // Team Edition: server-side per-team RAG (managed on the Middleton server).
 // Each deployed bot sets TEAM_ID env var (two-digit team number, e.g., "01" ~ "16").
 // Backend route: /api/team/{TEAM_ID}/chat-stream  →  team-isolated RAG + Gemma4.
-// RAG is managed via web UI at: https://middleton.p-e.kr/finbot/team/{TEAM_ID}/rag
+// RAG is managed via web UI at: https://middleton.p-e.kr/team/{TEAM_ID}/rag
 const TEAM_ID = process.env.TEAM_ID || '00'   // 00 = no team configured (fallback)
 const UPSTREAM =
   process.env.ONPREMISE_CHAT_STREAM_URL ||
-  `https://middleton.p-e.kr/finbot/api/team/${TEAM_ID}/chat-stream`
+  `https://middleton.p-e.kr/api/team/${TEAM_ID}/chat-stream`
 
 export const config = {
   // Node 함수 — Edge로 가도 OK 하지만 호환성 위해 Node 유지
