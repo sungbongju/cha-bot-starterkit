@@ -24,7 +24,7 @@
 ## 📊 전체 워크플로우 (학생 시점)
 
 ```
-[1] 사전 준비       Node.js · Git 설치, GitHub/Vercel/카카오 가입
+[1] 사전 준비       Git 설치, GitHub/Vercel/카카오 가입
         ↓
 [2] GitHub 빈 레포 + git push       내 코드 저장소 생성
         ↓
@@ -47,7 +47,7 @@
 
 ### 1️⃣ 사전 준비
 
-- [Node.js](https://nodejs.org/) + [Git](https://git-scm.com/downloads) 설치
+- [Git](https://git-scm.com/downloads) 설치 (학생 PC에는 Git만 있으면 끝 — 빌드는 Vercel이 자동)
 - GitHub / Vercel / 카카오디벨로퍼 계정 가입
 - **본인 팀 번호** (01~16) — 운영자에게 받음
 
@@ -145,10 +145,10 @@ git push
 
 | Step | 내용 | 시간 |
 |---|---|---|
-| 1 | 사전 준비 (Node.js · Git 설치 확인) | 5분 |
+| 1 | 사전 준비 (Git 설치 확인) | 3분 |
 | 2 | GitHub 가입 + Git 설정 | 3분 |
-| 3 | 템플릿 클론 + 로컬 실행 (선택) | 5분 |
-| 4 | 환경 변수 설정 (`.env` — 로컬 실행 시만 필요) | 3분 |
+| 3 | 템플릿 클론 + 본인 봇 폴더 만들기 | 5분 |
+| 4 | 환경 변수 메모 (팀 번호 + 카카오 키 — Vercel 등록용) | 1분 |
 | 5 | 본인 레포 만들기 + 푸시 | 7분 |
 | 6 | Vercel 배포 (`TEAM_ID` + `VITE_KAKAO_JS_KEY`) | 10분 |
 | 7 | 카카오 SDK 설정 (로그인 + 공유) | 10분 |
